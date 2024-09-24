@@ -1,5 +1,6 @@
 const { userModel, purchaseModel, courseModel } = require('../models/db.model.js')
 require('dotenv').config({ path: '../.env' });
+const {z} = require('zod')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const JWT_USER_SECRET = process.env.JWT_USER_SECRET
