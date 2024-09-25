@@ -34,7 +34,6 @@ export default function SignIn() {
 
     // if the user submits without filling all the field, simply return and show user an error message
 
-    console.log("Inside onclick event: ", formData)
       if (
         !formData || // if empty fields are submitted, then formData will be undefined. We can't do undefined.email
         !formData.firstName ||
@@ -42,22 +41,22 @@ export default function SignIn() {
         !formData.email ||
         !formData.password
       ) {
-        return console.log("Please fill out all the fields");
+        alert("Please fill out all the fields");
+        return 
       }
 
       // if all the data are provided, send it to backend 
       try {
         const response = await axios.post("/api/learner/signup", formData);
+        setFormData(null)
 
         if (response.data.success) {
           // clear the form or redirect the user
-          setFormData(null)
           setTimeout(() => navigate("/learner/signin"), 2000);
         } else {
           alert(response.data.message || "Internal server error");
         }
       } catch (error) {
-        console.log(error)
         if (error.response) {
           alert(
             // alert with the first error occuring

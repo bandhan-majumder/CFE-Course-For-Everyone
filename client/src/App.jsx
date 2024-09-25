@@ -3,8 +3,10 @@ import { useState } from "react";
 import Header from "./components/Header";
 import LearnerSignIn from "./pages/learner/SignIn";
 import LearnerSignUp from "./pages/learner/SignUp";
+import LearnerDashboard from "./pages/learner/Dashboard"
 import CreatorSignIn from "./pages/creator/SignIn";
 import CreatorSignUp from "./pages/creator/SignUp";
+import CreatorDashboard from "./pages/creator/Dashboard";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/viewer/Home";
 import About from "./pages/viewer/About";
@@ -26,10 +28,13 @@ function App() {
           {/* Learner auth routes */}
           <Route path="/learner/signup" element={<LearnerSignUp />} />
           <Route path="/learner/signin" element={<LearnerSignIn />} />
+          <Route path="/learner/dashboard" element={<LearnerDashboard />} />
 
           {/* Creator auth routes */}
           <Route path="/creator/signup" element={<CreatorSignUp />} />
           <Route path="/creator/signin" element={<CreatorSignIn />} />
+
+          <Route path="/creator/dashboard" element={<CreatorDashboard />} />
         </Routes>
       </div>
     </BrowserRouter>
