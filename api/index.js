@@ -19,5 +19,5 @@ app.use(express.json())
 app.use(cors())
 
 app.use('/api/course', courseRouter);
-app.use('/api/admin', adminRouter);
-app.use('/api/user', userRouter)
+app.use('/api/creator', adminRouter);
+app.use('/api/learner', userRouter)

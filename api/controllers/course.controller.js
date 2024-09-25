@@ -23,6 +23,7 @@ const purchaseNewCourse = async (req, res, next) => {
     })
 
     res.json({
+        "success": true,
         purchasedCourse
     })
 }
@@ -31,6 +32,7 @@ const coursesPreview = async (req, res) => {
     // give me all the courses
     const courses = await courseModel.find({})
     res.json({
+        "success": true,
         courses
     })
 }

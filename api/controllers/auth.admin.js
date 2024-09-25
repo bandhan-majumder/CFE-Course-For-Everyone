@@ -28,6 +28,7 @@ const signup = async (req, res) => {
     // if the format is not correct
     if (!safeParsed.success) {
         return res.status(403).json({
+            "success": false,
             "message": "Incorrect format",
             "error": safeParsed.error
         })
@@ -48,10 +49,12 @@ const signup = async (req, res) => {
             "lastName": lastName.toString()
         })
         res.json({
+            "success": true,
             "message": "Signed up successfully"
         })
     } catch {
         res.json({
+            "success": false,
             "Error": "error signing up"
         })
     }
@@ -66,6 +69,7 @@ const signin = async (req, res) => {
 
     if (!admin) {
         res.status(403).json({
+            "success": false,
             "message": "You don't have admin access"
         })
     } else {
@@ -76,10 +80,12 @@ const signin = async (req, res) => {
                 id: admin._id
             }, JWT_ADMIN_SECRET)
             res.json({
+                "success": true,
                 token
             })
         } else {
             res.status(403).json({
+                "success": false,
                 "message": "Wrong credentials"
             })
         }
@@ -98,6 +104,7 @@ const createCourse = async (req, res) => {
         creatorId: adminId // coming from middleware after req.userId is set from there
     })
     res.json({
+        "success": true,
         message: "Course created",
         courseId: course._id
     })
@@ -140,6 +147,7 @@ const updateCourse = async (req, res) => {
     }
 
     res.json({
+        "success": true,
         message: "Course updated successfully",
         courseId: course._id
     })
@@ -153,6 +161,7 @@ const getMyCourse = async (req, res) => {
     })
 
     res.json({
+        "success": true,
         allCourses
     })
 }

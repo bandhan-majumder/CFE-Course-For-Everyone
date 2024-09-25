@@ -10,7 +10,7 @@ const signup = async (req, res, next) => {
     // validating user input formats
     const rightSchema = z.object({
         email: z.string().email(),
-        password: z.string().min(8)
+        password: z.string()
             .min(8, "Password must be at least 8 characters long")
             .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
             .regex(/[a-z]/, "Password must contain at least one lowercase letter")
@@ -27,6 +27,7 @@ const signup = async (req, res, next) => {
 
     // if the format is not correct
     if (!safeParsed.success) {
+        console.log(safeParsed.error)
         return res.status(403).json({
             "message": "Incorrect format",
             "error": safeParsed.error
@@ -48,10 +49,12 @@ const signup = async (req, res, next) => {
             "lastName": lastName.toString()
         })
         res.json({
+            "success": true,
             "message": "Signed up successfully"
         })
     } catch {
         res.json({
+            "success": false,
             "Error": "error signing up"
         })
     }
@@ -76,6 +79,7 @@ const signin = async (req, res, next) => {
                 id: user._id
             }, JWT_USER_SECRET)
             res.json({
+                "success": true,
                 token
             })
         } else {
@@ -98,6 +102,7 @@ const purchasedCourses = async (req, res, next) => {
     })
 
     res.json({
+        "success": true,
         purchasedCourses,
         courseData
     })
