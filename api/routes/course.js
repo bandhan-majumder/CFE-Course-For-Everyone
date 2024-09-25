@@ -1,11 +1,11 @@
 const { Router } = require('express')
 const courseRouter = Router()
-const {userMiddleware} = require('../middleware/user.js')
+const {learnerMiddleware} = require('../middleware/learner.js')
 const { coursesPreview, purchaseNewCourse } = require('../controllers/course.controller.js')
 
-courseRouter.post('/purchase', userMiddleware, purchaseNewCourse)
+courseRouter.post('/purchase', learnerMiddleware, purchaseNewCourse)
 
-// show user all the available courses without authentication
+// show learner all the available courses without authentication
 courseRouter.get('/preview', coursesPreview)
 
 module.exports = {

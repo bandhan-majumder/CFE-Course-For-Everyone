@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import axios from "axios";
+import LearnerOAuth from "@/components/LearnerOAuth";
 
 export default function SignIn() {
 
@@ -32,7 +33,7 @@ export default function SignIn() {
 
     // clear the previous error/success messages
 
-    // if the user submits without filling all the field, simply return and show user an error message
+    // if the learner submits without filling all the field, simply return and show learner an error message
 
       if (
         !formData || // if empty fields are submitted, then formData will be undefined. We can't do undefined.email
@@ -51,7 +52,7 @@ export default function SignIn() {
         setFormData(null)
 
         if (response.data.success) {
-          // clear the form or redirect the user
+          // clear the form or redirect the learner
           setTimeout(() => navigate("/learner/signin"), 2000);
         } else {
           alert(response.data.message || "Internal server error");
@@ -113,10 +114,7 @@ export default function SignIn() {
               </span>
             </div>
           </div>
-          <Button variant="outline" className="w-full bg-red-600 text-white rounded-full">
-            <AiFillGoogleCircle className="mr-2 h-4 w-4" />
-            Continue with Google
-          </Button>
+          <LearnerOAuth />
           <p className="text-center text-sm">
             Already have an account?{" "}
             <Link to="/learner/signin" className="text-blue-500 underline">

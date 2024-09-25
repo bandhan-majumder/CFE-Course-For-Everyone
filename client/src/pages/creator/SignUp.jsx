@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import CreatorOAuth from "@/components/CreatorOAuth";
 
 export default function SignIn() {
   return (
@@ -41,7 +42,7 @@ export default function SignIn() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full">Sign in</Button>
+          <Button className="w-full rounded-full">Sign in</Button>
         </CardFooter>
         <CardContent className="grid gap-4">
           <div className="relative">
@@ -54,10 +55,7 @@ export default function SignIn() {
               </span>
             </div>
           </div>
-          <Button variant="outline" className="w-full bg-red-600 text-white">
-            <AiFillGoogleCircle className="mr-2 h-4 w-4" />
-            Continue with Google
-          </Button>
+          <CreatorOAuth />
           <p className="text-center text-sm">
             Already have an account?{" "}
             <Link to="/creator/signin" className="text-blue-500 underline">

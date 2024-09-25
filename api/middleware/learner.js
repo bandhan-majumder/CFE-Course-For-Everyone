@@ -1,13 +1,12 @@
 const jwt = require('jsonwebtoken')
 require('dotenv').config({ path: '../.env' });
-const JWT_ADMIN_SECRET = process.env.JWT_ADMIN_SECRET
+const JWT_LEARNER_SECRET = process.env.JWT_LEARNER_SECRET
 
-function adminMiddleware(req,res,next){
+function learnerMiddleware(req,res,next){
     const token = req.headers.token
-    const decoded = jwt.verify(token, JWT_ADMIN_SECRET)
+    const decoded = jwt.verify(token, JWT_LEARNER_SECRET)
     if(decoded){
-        req.userId = decoded.id
-        console.log("It's coming here..")
+        req.learnerId = decoded.id
         next()
     } else {
         req.status(403).json({
@@ -18,5 +17,5 @@ function adminMiddleware(req,res,next){
 }
 
 module.exports = {
-    adminMiddleware: adminMiddleware
+    learnerMiddleware: learnerMiddleware
 }

@@ -1,7 +1,7 @@
 const { purchaseModel, courseModel } = require('../models/db.model.js')
 
 const purchaseNewCourse = async (req, res, next) => {
-    const userId = req.userId
+    const learnerId = req.learnerId
     const courseId = req.body.courseId
 
     const courseExists = await courseModel.findOne({
@@ -15,10 +15,10 @@ const purchaseNewCourse = async (req, res, next) => {
     }
 
     // if course exists
-    // logic to be added later : check if the user actually paid the price or not
+    // logic to be added later : check if the learner actually paid the price or not
 
     const purchasedCourse = await purchaseModel.create({
-        userId,
+        learnerId,
         courseId
     })
 

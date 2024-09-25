@@ -1,13 +1,13 @@
-const { adminModel, courseModel } = require('../models/db.model.js')
+const { creatorModel, courseModel } = require('../models/db.model.js')
 const bcrypt = require('bcrypt')
 require('dotenv').config({ path: '../.env' });
 const jwt = require('jsonwebtoken')
-const JWT_ADMIN_SECRET = process.env.JWT_ADMIN_SECRET
+const JWT_CREATOR_SECRET = process.env.JWT_CREATOR_SECRET
 const { z } = require('zod')
 
 const signup = async (req, res) => {
 
-    // validating user input formats
+    // validating creator input formats
     const rightSchema = z.object({
         email: z.string().email(),
         password: z.string().min(8)
@@ -42,7 +42,7 @@ const signup = async (req, res) => {
 
     // create the data table
     try {
-        await adminModel.create({
+        await creatorModel.create({
             "email": email.toString(),
             "password": hashedPassword.toString(),
             "firstName": firstName.toString(),
@@ -61,24 +61,24 @@ const signup = async (req, res) => {
 }
 
 const signin = async (req, res) => {
-    const {email, password} = req.body
+    const { email, password } = req.body
 
-    const admin = await adminModel.findOne({
+    const creator = await creatorModel.findOne({
         email
     })
 
-    if (!admin) {
+    if (!creator) {
         res.status(403).json({
             "success": false,
-            "message": "You don't have admin access"
+            "message": "You don't have creator access"
         })
     } else {
-        const passCheck = bcrypt.compare(password, admin.password) // raw password being compared with hashed password
+        const passCheck = bcrypt.compare(password, creator.password) // raw password being compared with hashed password
 
         if (passCheck) { // if the password matches, return a token
             const token = jwt.sign({
-                id: admin._id
-            }, JWT_ADMIN_SECRET)
+                id: creator._id
+            }, JWT_CREATOR_SECRET)
             res.json({
                 "success": true,
                 token
@@ -92,16 +92,104 @@ const signin = async (req, res) => {
     }
 }
 
+const oAuth = async (req, res) => {
+    const email = req.body.email
+
+    // check if the account already exists or not
+    const accountExists = await creatorModel.findOne({
+        email
+    })
+
+    // if found one, directly log them in
+    if (accountExists) {
+        res.json({
+            success: true,
+            message: "Signed in successfully"
+        })
+    } else { // if the account does not exist, create one
+
+        // generate a random password
+        function generatePassword() {
+            const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+            const numberChars = '0123456789';
+            const specialChars = '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+            const openingBrackets = '({[';
+            const closingBrackets = ')}]';
+            const specialCharsWithSlash = '/\\?|';
+
+            let password = '';
+
+            // Generate at least one uppercase letter
+            password += uppercaseChars[Math.floor(Math.random() * uppercaseChars.length)];
+
+            // Generate at least one lowercase letter
+            password += lowercaseChars[Math.floor(Math.random() * lowercaseChars.length)];
+
+            // Generate at least two numbers
+            password += numberChars[Math.floor(Math.random() * numberChars.length)];
+            password += numberChars[Math.floor(Math.random() * numberChars.length)];
+
+            // Generate at least one special character
+            password += specialChars[Math.floor(Math.random() * specialChars.length)];
+
+            // Generate one opening bracket
+            password += openingBrackets[Math.floor(Math.random() * openingBrackets.length)];
+
+            // Generate one closing bracket
+            password += closingBrackets[Math.floor(Math.random() * closingBrackets.length)];
+
+            // Generate one special character with slash
+            password += specialCharsWithSlash[Math.floor(Math.random() * specialCharsWithSlash.length)];
+
+            // Generate remaining characters randomly
+            while (password.length < 8) {
+                const charSet = uppercaseChars + lowercaseChars + numberChars + specialChars;
+                password += charSet[Math.floor(Math.random() * charSet.length)];
+            }
+
+            // Shuffle the password
+            return password
+                .split('')
+                .sort(() => Math.random() - 0.5)
+                .join('');
+        }
+
+        const firstName = req.body.name.toLowerCase()
+        const lastName = ((Math.floor(Math.random() * 1000) + 23459009123).toString()).slice(-3);
+        const password = generatePassword();
+        const hashedPassword = await bcrypt.hash(password, 5)
+
+        try {
+            const user = await creatorModel.create({
+                firstName,
+                lastName,
+                email,
+                password: hashedPassword
+            })
+            res.json({
+                success: true,
+                message: "Signed in successfully"
+            })
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            })
+        }
+    }
+}
+
 // will have to work on this later for uploading images in firebase
 const createCourse = async (req, res) => {
-    const adminId = req.userId
+    const creatorId = req.creatorId
     const { title, description, imageUrl, price } = req.body
     const course = await courseModel.create({
         title,
         description,
         price,
         imageUrl,
-        creatorId: adminId // coming from middleware after req.userId is set from there
+        creatorId: creatorId // coming from middleware after req.creatorId is set from there
     })
     res.json({
         "success": true,
@@ -113,7 +201,7 @@ const createCourse = async (req, res) => {
 const updateCourse = async (req, res) => {
     const { title, description, imageUrl, price, courseId } = req.body
 
-    const adminId = req.userId
+    const creatorId = req.creatorId
 
     // at first check if there is course or not
     const courseExist = await courseModel.findOne({
@@ -126,10 +214,10 @@ const updateCourse = async (req, res) => {
         })
     }
 
-    // if course exists, check if the user has created that or not
+    // if course exists, check if the creator has created that or not
     const course = await courseModel.updateOne({
         _id: courseId,
-        creatorId: adminId
+        creatorId: creatorId
     },
         {
             // update 
@@ -154,10 +242,10 @@ const updateCourse = async (req, res) => {
 }
 
 const getMyCourse = async (req, res) => {
-    const adminId = req.userId
+    const creatorId = req.creatorId
 
     const allCourses = await courseModel.find({
-        creatorId: adminId
+        creatorId: creatorId
     })
 
     res.json({
@@ -169,6 +257,7 @@ const getMyCourse = async (req, res) => {
 module.exports = {
     signin: signin,
     signup: signup,
+    oAuth: oAuth,
     updateCourse: updateCourse,
     getMyCourse: getMyCourse,
     createCourse: createCourse

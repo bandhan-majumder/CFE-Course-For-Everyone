@@ -1,7 +1,7 @@
 const express = require("express")
-const { userRouter } = require('./routes/user')
+const { learnerRouter } = require('./routes/learner')
 const { courseRouter } = require('./routes/course')
-const { adminRouter } = require('./routes/admin')
+const { creatorRouter } = require('./routes/creator')
 const mongoose = require('mongoose')
 require('dotenv').config({ path: '../.env' });
 const MONGO_URL = process.env.MONGO_URL
@@ -19,5 +19,5 @@ app.use(express.json())
 app.use(cors())
 
 app.use('/api/course', courseRouter);
-app.use('/api/creator', adminRouter);
-app.use('/api/learner', userRouter)
+app.use('/api/creator', creatorRouter);
+app.use('/api/learner', learnerRouter)
