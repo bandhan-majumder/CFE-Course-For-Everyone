@@ -15,74 +15,49 @@ import axios from "axios";
 import CreatorOAuth from "@/components/CreatorOAuth";
 import Spinner from "@/components/ui/spinner";
 import {
-  signUpStart,
-  singUpSuccess,
-  singUpFailure,
+  signInStart,
+  signInFailure,
   clearError
 } from "@/features/creator/creatorSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AlertCircle } from "lucide-react";
-
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function SignUp() {
-  const [formData, setFormData] = useState(null);
+  const [formData, setFormData] = useState({});
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
   useEffect(() => {
-    // Clear error when component mounts
     dispatch(clearError());
-
-    // Clear error when component unmounts
-    return () => {
-      dispatch(clearError());
-    };
+    return () => dispatch(clearError());
   }, [dispatch]);
 
-  const { loading, signUpError: errorMessage } = useSelector(
-    (state) => state.creator
-  );
+  const { loading, error: errorMessage } = useSelector((state) => state.creator);
 
-  // handle the changes in input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
   const handleSubmit = async (e) => {
-    //   // firstly prevent the page from refreshing
     e.preventDefault();
 
-    if (!formData || !formData.email || !formData.password) {
-      alert("Please fill out all the fields");
+    if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
+      dispatch(signInFailure("Please fill out all the fields"));
       return;
     }
 
     try {
-      dispatch(signUpStart()); // set loading true, set error null
+      dispatch(signInStart());
       const response = await axios.post("/api/creator/signup", formData);
 
       if (response.data.success) {
-        // redirect the creator
-        dispatch(singUpSuccess(response.data));
-        setTimeout(() => navigate("/creator/dashboard"), 1200);
+        navigate("/creator/signin");
       } else {
-        dispatch(
-          singUpFailure(response.data.message || "Internal server error")
-        );
+        dispatch(signInFailure(response.data.message || "Internal server error"));
       }
     } catch (error) {
-      if (error.response.data.message) {
-        dispatch(singUpFailure(error.response.data.message));
-      } else {
-        console.log(error);
-        dispatch(
-          singUpFailure(
-            error.issues.errors[0].message ||
-              "Password must contain one uppercase, one lower case, 2 digits, one special characters and any of these '/''''?' and one opening and one closing bracket"
-          )
-        );
-      }
+      dispatch(signInFailure(error.response?.data?.message || error.message || "An unexpected error occurred"));
     }
   };
 
@@ -90,10 +65,8 @@ export default function SignUp() {
     <div className="flex justify-center items-center min-h-screen p-4">
       <Card className="w-full max-w-[800px]">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl">
-            Sign in to your creator's account
-          </CardTitle>
-          <CardDescription>Enter your email and password below</CardDescription>
+          <CardTitle className="text-2xl">Create your creator account</CardTitle>
+          <CardDescription>Enter your details below to sign up</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
@@ -102,7 +75,7 @@ export default function SignUp() {
               id="firstName"
               type="text"
               placeholder="John"
-              onChangeCapture={handleChange}
+              onChange={handleChange}
             />
           </div>
           <div className="grid gap-2">
@@ -110,8 +83,8 @@ export default function SignUp() {
             <Input
               id="lastName"
               type="text"
-              placeholder="Wick"
-              onChangeCapture={handleChange}
+              placeholder="Doe"
+              onChange={handleChange}
             />
           </div>
           <div className="grid gap-2">
@@ -119,8 +92,8 @@ export default function SignUp() {
             <Input
               id="email"
               type="email"
-              placeholder="m@example.com"
-              onChangeCapture={handleChange}
+              placeholder="john@example.com"
+              onChange={handleChange}
             />
           </div>
           <div className="grid gap-2">
@@ -129,7 +102,7 @@ export default function SignUp() {
               id="password"
               type="password"
               placeholder="**************"
-              onChangeCapture={handleChange}
+              onChange={handleChange}
             />
           </div>
           {errorMessage && (
@@ -169,7 +142,7 @@ export default function SignUp() {
           </div>
           <CreatorOAuth />
           <p className="text-center text-sm">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <Link to="/creator/signin" className="text-blue-500 underline">
               Sign in
             </Link>

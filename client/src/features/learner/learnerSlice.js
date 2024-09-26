@@ -15,14 +15,13 @@ const learnerSlice = createSlice({
             state.loading = true
             state.error = null
         },
-        singInSuccess: (state, action) => {
+        signInSuccess: (state, action) => {
             state.currentUser = action.payload,
                 state.loading = false,
                 state.error = null
 
         },
-        singInFailure: (state, action) => {
-            state.currentUser = action.payload,
+        signInFailure: (state, action) => {
             state.loading = false,
             state.error = action.payload
         },
@@ -33,6 +32,6 @@ const learnerSlice = createSlice({
     }
 });
 
-export const { signInStart, singInFailure, singInSuccess, clearError} = learnerSlice.actions
+export const { signInStart, signInFailure, signInSuccess, clearError} = learnerSlice.actions
 
 export default learnerSlice.reducer; //
