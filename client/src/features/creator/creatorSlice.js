@@ -19,13 +19,13 @@ const creatorSlice = createSlice({
             state.loading = true
             state.error = null
         },
-        singInSuccess: (state, action) => {
+        signInSuccess: (state, action) => {
             state.currentUser = action.payload,
                 state.loading = false,
                 state.error = null
 
         },
-        singInFailure: (state, action) => {
+        signInFailure: (state, action) => {
             state.currentUser = action.payload,
             state.loading = false,
             state.error = action.payload
@@ -34,13 +34,13 @@ const creatorSlice = createSlice({
             state.loading = true
             state.signUpError = null
         },
-        singUpSuccess: (state, action) => {
+        signUpSuccess: (state, action) => {
             state.currentUser = action.payload,
                 state.loading = false,
                 state.signUpError = null
 
         },
-        singUpFailure: (state, action) => {
+        signUpFailure: (state, action) => {
             state.currentUser = action.payload,
             state.loading = false,
             state.signUpError = action.payload
@@ -48,6 +48,6 @@ const creatorSlice = createSlice({
     }
 });
 
-export const { signInStart, singInFailure, singInSuccess, signUpStart, singUpSuccess, singUpFailure, clearError } = creatorSlice.actions
+export const { signInStart, signInFailure, signInSuccess, signUpStart, signUpSuccess, signUpFailure, clearError } = creatorSlice.actions
 
 export default creatorSlice.reducer; //
