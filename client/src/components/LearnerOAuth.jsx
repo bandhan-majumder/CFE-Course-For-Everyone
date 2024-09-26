@@ -22,15 +22,14 @@ export default function LearnerOAuth() {
       })
 
       if(response.data.success){
-        alert(response.data.message)
+        alert("Successfully signed in")
         navigate("/learner/dashboard")
       } else {
         console.log(response)
         alert("Error signing in with Google:");
       }
     } catch (error) {
-      console.log(error)
-      alert("Recheck your internet connection and try again later");
+      alert("Error signing in");
     }
   }
 

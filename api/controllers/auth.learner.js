@@ -161,7 +161,7 @@ const oAuth = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 5)
 
         try {
-            const newUser = await lEARNERModel.create({
+            const newUser = await learnerModel.create({
                 firstName,
                 lastName,
                 email,
