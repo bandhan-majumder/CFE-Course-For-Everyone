@@ -18,21 +18,30 @@ import {
   signInStart,
   singInSuccess,
   singInFailure,
+  clearError
 } from "@/features/learner/learnerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AlertCircle } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-export default function SignIn() {
+export default function SignUp() {
   const [formData, setFormData] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  useEffect(() => {
+    // Clear error when component mounts
+    dispatch(clearError());
+
+    // Clear error when component unmounts
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch]);
   const { loading, error: errorMessage } = useSelector(
     (state) => state.learner
   );
 
-  console.log(loading);
   // handle the changes in input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -42,7 +51,13 @@ export default function SignIn() {
     //   // firstly prevent the page from refreshing
     e.preventDefault();
 
-    if (!formData || !formData.email || !formData.firstName || !formData.lastName || !formData.password) {
+    if (
+      !formData ||
+      !formData.email ||
+      !formData.password ||
+      !formData.firstName ||
+      !formData.lastName
+    ) {
       alert("Please fill out all the fields");
       return;
     }
@@ -61,7 +76,17 @@ export default function SignIn() {
         );
       }
     } catch (error) {
-        dispatch(singInFailure("Password must contain one uppercase, lowercase, special character, opening bracket, closing bracket, '/', '', '?' and two digits"));
+      if (error.response.data.message) {
+        dispatch(singInFailure(error.response.data.message));
+      } else {
+        console.log(error);
+        dispatch(
+          singInFailure(
+            error.issues.errors[0].message ||
+              "Password must contain one uppercase, one lower case, 2 digits, one special characters and any of these '/''''?' and one opening and one closing bracket"
+          )
+        );
+      }
     }
   };
 
@@ -70,17 +95,17 @@ export default function SignIn() {
       <Card className="w-full max-w-[800px]">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl">
-            Create your learner's account
+            Sign in to your learner's account
           </CardTitle>
           <CardDescription>Enter your email and password below</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-        <div className="grid gap-2">
-            <Label htmlFor="firstName">First Name</Label>
+          <div className="grid gap-2">
+            <Label htmlFor="firstName">First name</Label>
             <Input
               id="firstName"
               type="text"
-              placeholder="Roman"
+              placeholder="John"
               onChangeCapture={handleChange}
             />
           </div>
@@ -89,7 +114,7 @@ export default function SignIn() {
             <Input
               id="lastName"
               type="text"
-              placeholder="Reings"
+              placeholder="Wick"
               onChangeCapture={handleChange}
             />
           </div>
@@ -98,7 +123,7 @@ export default function SignIn() {
             <Input
               id="email"
               type="email"
-              placeholder="roman@example.com"
+              placeholder="john@example.com"
               onChangeCapture={handleChange}
             />
           </div>
@@ -149,7 +174,7 @@ export default function SignIn() {
           <LearnerOAuth />
           <p className="text-center text-sm">
             Don't have an account?{" "}
-            <Link to="/learner/signup" className="text-blue-500 underline">
+            <Link to="/learner/signin" className="text-blue-500 underline">
               Sign in
             </Link>
           </p>

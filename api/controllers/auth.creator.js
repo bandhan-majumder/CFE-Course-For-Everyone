@@ -29,7 +29,7 @@ const signup = async (req, res) => {
     if (!safeParsed.success) {
         return res.status(403).json({
             "success": false,
-            "message": safeParsed.error.message,
+            "message": "Incorrect email or password format. Password must contain one uppercase, one lower case, 2 digits, one special characters and any of these '/''?' and one opening and one closing bracket",
             "error": safeParsed.error
         })
     }

@@ -18,6 +18,7 @@ import {
   signInStart,
   singInSuccess,
   singInFailure,
+  clearError
 } from "@/features/learner/learnerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AlertCircle } from "lucide-react";
@@ -28,11 +29,19 @@ export default function SignIn() {
   const [formData, setFormData] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  useEffect(() => {
+    // Clear error when component mounts
+    dispatch(clearError());
+
+    // Clear error when component unmounts
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch]);
   const { loading, error: errorMessage } = useSelector(
     (state) => state.learner
   );
 
-  console.log(loading);
   // handle the changes in input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });

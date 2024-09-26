@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { AiFillGoogleCircle } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -11,38 +10,151 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import CreatorOAuth from "@/components/CreatorOAuth";
+import Spinner from "@/components/ui/spinner";
+import {
+  signUpStart,
+  singUpSuccess,
+  singUpFailure,
+  clearError
+} from "@/features/creator/creatorSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AlertCircle } from "lucide-react";
 
-export default function SignIn() {
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+export default function SignUp() {
+  const [formData, setFormData] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    // Clear error when component mounts
+    dispatch(clearError());
+
+    // Clear error when component unmounts
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch]);
+
+  const { loading, signUpError: errorMessage } = useSelector(
+    (state) => state.creator
+  );
+
+  // handle the changes in input
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+  };
+
+  const handleSubmit = async (e) => {
+    //   // firstly prevent the page from refreshing
+    e.preventDefault();
+
+    if (!formData || !formData.email || !formData.password) {
+      alert("Please fill out all the fields");
+      return;
+    }
+
+    try {
+      dispatch(signUpStart()); // set loading true, set error null
+      const response = await axios.post("/api/creator/signup", formData);
+
+      if (response.data.success) {
+        // redirect the creator
+        dispatch(singUpSuccess(response.data));
+        setTimeout(() => navigate("/creator/dashboard"), 1200);
+      } else {
+        dispatch(
+          singUpFailure(response.data.message || "Internal server error")
+        );
+      }
+    } catch (error) {
+      if (error.response.data.message) {
+        dispatch(singUpFailure(error.response.data.message));
+      } else {
+        console.log(error);
+        dispatch(
+          singUpFailure(
+            error.issues.errors[0].message ||
+              "Password must contain one uppercase, one lower case, 2 digits, one special characters and any of these '/''''?' and one opening and one closing bracket"
+          )
+        );
+      }
+    }
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen p-4">
       <Card className="w-full max-w-[800px]">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl">
-            Create your creator's account
+            Sign in to your creator's account
           </CardTitle>
-          <CardDescription>Enter your details below</CardDescription>
+          <CardDescription>Enter your email and password below</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="firstname">First name</Label>
-            <Input id="firstname" type="text" placeholder="John" />
+            <Label htmlFor="firstName">First name</Label>
+            <Input
+              id="firstName"
+              type="text"
+              placeholder="John"
+              onChangeCapture={handleChange}
+            />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="lastname">Last name</Label>
-            <Input id="lastname" type="text" placeholder="Wick" />
+            <Label htmlFor="lastName">Last name</Label>
+            <Input
+              id="lastName"
+              type="text"
+              placeholder="Wick"
+              onChangeCapture={handleChange}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="john@example.com" />
+            <Input
+              id="email"
+              type="email"
+              placeholder="m@example.com"
+              onChangeCapture={handleChange}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" placeholder="**************" />
+            <Input
+              id="password"
+              type="password"
+              placeholder="**************"
+              onChangeCapture={handleChange}
+            />
           </div>
+          {errorMessage && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{errorMessage}</AlertDescription>
+            </Alert>
+          )}
         </CardContent>
         <CardFooter>
-          <Button className="w-full rounded-full">Sign in</Button>
+          <Button
+            className="w-full rounded-full bg-black"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Spinner size="small" className="from-white to-green-600" />
+                <span className="pl-3">Loading...</span>
+              </>
+            ) : (
+              "Sign up"
+            )}
+          </Button>
         </CardFooter>
         <CardContent className="grid gap-4">
           <div className="relative">
@@ -57,7 +169,7 @@ export default function SignIn() {
           </div>
           <CreatorOAuth />
           <p className="text-center text-sm">
-            Already have an account?{" "}
+            Don't have an account?{" "}
             <Link to="/creator/signin" className="text-blue-500 underline">
               Sign in
             </Link>
