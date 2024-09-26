@@ -22,7 +22,7 @@ export default function CreatorOAuth() {
       })
 
       if(response.data.success){
-        alert(response.data.message)
+        alert("Signed in successfully")
         navigate("/creator/dashboard")
       } else {
         console.log(response)

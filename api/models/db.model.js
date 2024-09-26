@@ -6,6 +6,7 @@ const learnerSchema = new Schema({
     email: {type: String, unique: true},
     password: String,
     firstName: String,
+    lastName: String,
     profilePicture: { type: String, default: 'https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?t=st=1727332486~exp=1727333086~hmac=a379707835f518fdaac6b7d78b566fe324077ac6582cbcfd59eb59a9426938ce' }
 })
 

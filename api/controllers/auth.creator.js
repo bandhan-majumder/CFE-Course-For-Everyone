@@ -159,7 +159,8 @@ const oAuth = async (req, res) => {
                 .join('');
         }
 
-        const firstName = req.body.name.toLowerCase()
+        const nameArr = req.body.name.toLowerCase().split(" ")
+        const firstName = nameArr[0]
         const lastName = ((Math.floor(Math.random() * 1000) + 23459009123).toString()).slice(-3);
         const password = generatePassword();
         const hashedPassword = await bcrypt.hash(password, 5)
