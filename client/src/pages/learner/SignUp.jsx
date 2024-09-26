@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { AiFillGoogleCircle } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
@@ -14,64 +13,57 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import axios from "axios";
 import LearnerOAuth from "@/components/LearnerOAuth";
+import Spinner from "@/components/ui/spinner";
+import {
+  signInStart,
+  singInSuccess,
+  singInFailure,
+} from "@/features/learner/learnerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AlertCircle } from "lucide-react";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function SignIn() {
-
-  const [formData, setFormData] = useState(null)
+  const [formData, setFormData] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error: errorMessage } = useSelector(
+    (state) => state.learner
+  );
 
-  // handle the changes in input 
+  console.log(loading);
+  // handle the changes in input
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() }); 
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
-  // handle the submit button
   const handleSubmit = async (e) => {
-    
     //   // firstly prevent the page from refreshing
     e.preventDefault();
 
-    // clear the previous error/success messages
+    if (!formData || !formData.email || !formData.firstName || !formData.lastName || !formData.password) {
+      alert("Please fill out all the fields");
+      return;
+    }
 
-    // if the learner submits without filling all the field, simply return and show learner an error message
+    try {
+      dispatch(signInStart()); // set loading true, set error null
+      const response = await axios.post("/api/learner/signup", formData);
 
-      if (
-        !formData || // if empty fields are submitted, then formData will be undefined. We can't do undefined.email
-        !formData.firstName ||
-        !formData.lastName ||
-        !formData.email ||
-        !formData.password
-      ) {
-        alert("Please fill out all the fields");
-        return 
+      if (response.data.success) {
+        // redirect the learner
+        dispatch(singInSuccess(response.data));
+        setTimeout(() => navigate("/learner/dashboard"), 1200);
+      } else {
+        dispatch(
+          singInFailure(response.data.message || "Internal server error")
+        );
       }
-
-      // if all the data are provided, send it to backend 
-      try {
-        const response = await axios.post("/api/learner/signup", formData);
-        setFormData(null)
-
-        if (response.data.success) {
-          // clear the form or redirect the learner
-          setTimeout(() => navigate("/learner/signin"), 2000);
-        } else {
-          alert(response.data.message || "Internal server error");
-        }
-      } catch (error) {
-        if (error.response) {
-          alert(
-            // alert with the first error occuring
-            error.response.data.error.issues[0].message ||
-              "An error occurred during signup. Try with different mail"
-          );
-        } else if (error.request) {
-          alert("No response from server. Please check your internet connection.")
-        } else {
-          alert("An error occurred while sending the request");
-        }
-      
-      }
-  }
+    } catch (error) {
+        dispatch(singInFailure("Password must contain one uppercase, lowercase, special character, opening bracket, closing bracket, '/', '', '?' and two digits"));
+    }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen p-4">
@@ -80,28 +72,68 @@ export default function SignIn() {
           <CardTitle className="text-2xl">
             Create your learner's account
           </CardTitle>
-          <CardDescription>Enter your details below</CardDescription>
+          <CardDescription>Enter your email and password below</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="firstname">First name</Label>
-            <Input id="firstName" type="text" placeholder="John" onChangeCapture={handleChange}/>
+        <div className="grid gap-2">
+            <Label htmlFor="firstName">First Name</Label>
+            <Input
+              id="firstName"
+              type="text"
+              placeholder="Roman"
+              onChangeCapture={handleChange}
+            />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="lastname">Last name</Label>
-            <Input id="lastName" type="text" placeholder="Wick" onChangeCapture={handleChange}/>
+            <Label htmlFor="lastName">Last name</Label>
+            <Input
+              id="lastName"
+              type="text"
+              placeholder="Reings"
+              onChangeCapture={handleChange}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="john@example.com" onChangeCapture={handleChange}/>
+            <Input
+              id="email"
+              type="email"
+              placeholder="roman@example.com"
+              onChangeCapture={handleChange}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" placeholder="**************" onChangeCapture={handleChange}/>
+            <Input
+              id="password"
+              type="password"
+              placeholder="**************"
+              onChangeCapture={handleChange}
+            />
           </div>
+          {errorMessage && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{errorMessage}</AlertDescription>
+            </Alert>
+          )}
         </CardContent>
         <CardFooter>
-          <Button type='submit' className="w-full rounded-full" onClick={handleSubmit}>Sign Up</Button>
+          <Button
+            className="w-full rounded-full bg-black"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Spinner size="small" className="from-white to-green-600" />
+                <span className="pl-3">Loading...</span>
+              </>
+            ) : (
+              "Sign up"
+            )}
+          </Button>
         </CardFooter>
         <CardContent className="grid gap-4">
           <div className="relative">
@@ -116,8 +148,8 @@ export default function SignIn() {
           </div>
           <LearnerOAuth />
           <p className="text-center text-sm">
-            Already have an account?{" "}
-            <Link to="/learner/signin" className="text-blue-500 underline">
+            Don't have an account?{" "}
+            <Link to="/learner/signup" className="text-blue-500 underline">
               Sign in
             </Link>
           </p>

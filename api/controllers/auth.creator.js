@@ -29,7 +29,7 @@ const signup = async (req, res) => {
     if (!safeParsed.success) {
         return res.status(403).json({
             "success": false,
-            "message": "Incorrect format",
+            "message": safeParsed.error.message,
             "error": safeParsed.error
         })
     }
@@ -62,34 +62,38 @@ const signup = async (req, res) => {
 
 const signin = async (req, res) => {
     const { email, password } = req.body
+    console.log(email, password)
 
     const creator = await creatorModel.findOne({
         email
     })
 
     if (!creator) {
-        res.status(403).json({
+        return res.status(403).json({
             "success": false,
             "message": "You don't have creator access"
         })
-    } else {
-        const passCheck = bcrypt.compare(password, creator.password) // raw password being compared with hashed password
-
-        if (passCheck) { // if the password matches, return a token
-            const token = jwt.sign({
-                id: creator._id
-            }, JWT_CREATOR_SECRET)
-            res.json({
-                "success": true,
-                token
-            })
-        } else {
-            res.status(403).json({
-                "success": false,
-                "message": "Wrong credentials"
-            })
-        }
     }
+
+    const passCheck = await bcrypt.compare(password, creator.password) // raw password being compared with hashed password
+
+    if (passCheck) { // if the password matches, return a token
+        const token = jwt.sign({
+            id: creator._id
+        }, JWT_CREATOR_SECRET)
+
+        const { password: pass, ...rest } = creator._doc
+        rest.success = true
+        res.status(200).cookie('access_token', token, {
+            httpOnly: true
+        }).json(rest)
+    } else {
+        res.status(403).json({
+            "success": false,
+            "message": "Wrong credentials"
+        })
+    }
+
 }
 
 const oAuth = async (req, res) => {
@@ -161,21 +165,30 @@ const oAuth = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 5)
 
         try {
-            const user = await creatorModel.create({
+            const newUser = await creatorModel.create({
                 firstName,
                 lastName,
                 email,
                 password: hashedPassword
             })
-            res.json({
-                success: true,
-                message: "Signed in successfully"
-            })
+
+            const token = jwt.sign({
+                "id": newUser._id
+            }, JWT_CREATOR_SECRET, { expiresIn: '1d' })
+
+            // detaching the password filed from the payload before sending as response
+            const { password: pass, ...rest } = newUser._doc
+            rest.success = true
+            res.status(200).cookie('access_token', token, {
+                httpOnly: true
+            }).json(rest)
         } catch (error) {
             res.status(500).json({
                 success: false,
-                message: "Internal server error"
-            })
+                message: "Error signing up",
+                error: error.message,
+                stack: error.stack
+            });
         }
     }
 }

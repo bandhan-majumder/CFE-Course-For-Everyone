@@ -29,7 +29,7 @@ export default function CreatorOAuth() {
         alert("Error signing in with Google:");
       }
     } catch (error) {
-      alert("Recheck your internet connection and try again later");
+      alert(error.message);
     }
   }
 

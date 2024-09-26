@@ -13,12 +13,26 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import axios from "axios";
 import LearnerOAuth from "@/components/LearnerOAuth";
+import Spinner from "@/components/ui/spinner";
+import {
+  signInStart,
+  singInSuccess,
+  singInFailure,
+} from "@/features/learner/learnerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AlertCircle } from "lucide-react";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function SignIn() {
   const [formData, setFormData] = useState(null);
-  console.log(formData);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error: errorMessage } = useSelector(
+    (state) => state.learner
+  );
 
+  console.log(loading);
   // handle the changes in input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -34,21 +48,24 @@ export default function SignIn() {
     }
 
     try {
+      dispatch(signInStart()); // set loading true, set error null
       const response = await axios.post("/api/learner/signin", formData);
-      setFormData(null); // clear the form
 
       if (response.data.success) {
         // redirect the learner
-        setTimeout(() => navigate("/learner/dashboard"), 2000);
+        dispatch(singInSuccess(response.data));
+        setTimeout(() => navigate("/learner/dashboard"), 1200);
       } else {
-        alert(response.data.message || "Internal server error");
+        dispatch(
+          singInFailure(response.data.message || "Internal server error")
+        );
       }
     } catch (error) {
       if (error.response.data.message) {
-        alert(error.response.data.message);
-        navigate("/learner/signup");
+        dispatch(singInFailure(error.response.data.message));
       } else {
-        alert("Error in signing up! Please try again later");
+        console.log(error)
+        dispatch(singInFailure(error.issues.errors[0].message || "Password must contain one uppercase, one lower case, 2 digits, one special characters and any of these '/''\''?' and one opening and one closing bracket"));
       }
     }
   };
@@ -81,10 +98,28 @@ export default function SignIn() {
               onChangeCapture={handleChange}
             />
           </div>
+          {errorMessage && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{errorMessage}</AlertDescription>
+            </Alert>
+          )}
         </CardContent>
         <CardFooter>
-          <Button className="w-full rounded-full" onClick={handleSubmit}>
-            Sign in
+          <Button
+            className="w-full rounded-full bg-black"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Spinner size="small" className="from-white to-green-600" />
+                <span className="pl-3">Loading...</span>
+              </>
+            ) : (
+              "Sign up"
+            )}
           </Button>
         </CardFooter>
         <CardContent className="grid gap-4">

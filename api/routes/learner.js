@@ -8,6 +8,7 @@ learnerRouter.post('/signup', signup)
 learnerRouter.post('/signin', signin)
 
 learnerRouter.post('/oAuth', oAuth)
+
 learnerRouter.get('/purchases', learnerMiddleware, purchasedCourses )
 
 module.exports = {

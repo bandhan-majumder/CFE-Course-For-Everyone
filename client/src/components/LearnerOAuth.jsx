@@ -29,6 +29,7 @@ export default function LearnerOAuth() {
         alert("Error signing in with Google:");
       }
     } catch (error) {
+      console.log(error)
       alert("Recheck your internet connection and try again later");
     }
   }

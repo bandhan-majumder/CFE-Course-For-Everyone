@@ -6,8 +6,10 @@ const mongoose = require('mongoose')
 require('dotenv').config({ path: '../.env' });
 const MONGO_URL = process.env.MONGO_URL
 const cors = require('cors')
+const cookieParser = require('cookie-parser');
 
 const app = express()
+app.use(cookieParser());
 
 async function main(){
     await mongoose.connect(MONGO_URL)

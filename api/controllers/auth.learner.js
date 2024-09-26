@@ -18,7 +18,7 @@ const signup = async (req, res, next) => {
             .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character") // 
             .regex(/[{(\[]/, "Password must contain one opening bracket")
             .regex(/[)}\]]/, "Password must contain one closing bracket")
-            .regex(/[/?\\|]/, "Password must contain either one on these '\' '/' '?' '|'"),
+            .regex(/[/?]/, "Password must contain either one on these '/' '?'"),
         firstName: z.string(),
         lastName: z.string()
     })
@@ -29,7 +29,7 @@ const signup = async (req, res, next) => {
     if (!safeParsed.success) {
         console.log(safeParsed.error)
         return res.status(403).json({
-            "message": "Incorrect format",
+            "message": "Invalid format. Make sure you give correct email and password. Password must contain one uppercase, one lowercase, 2 digits, one special character, one opening, one closing bracket, one '?' or '/'",
             "error": safeParsed.error
         })
     }
@@ -72,16 +72,18 @@ const signin = async (req, res, next) => {
             "message": "You don't have an account, sign up first"
         })
     } else {
-        const passCheck = bcrypt.compare(password, learner.password)
+        const passCheck = await bcrypt.compare(password, learner.password)
 
         if (passCheck) {
             const token = jwt.sign({
                 id: learner._id
             }, JWT_LEARNER_SECRET)
-            res.json({
-                "success": true,
-                token
-            })
+
+            const { password: pass, ...rest } = learner._doc
+            rest.success = true
+            res.status(200).cookie('access_token', token, {
+                httpOnly: true
+            }).json(rest)
         } else {
             res.status(403).json({
                 "message": "Wrong credentials"
@@ -159,23 +161,30 @@ const oAuth = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 5)
 
         try {
-            const user = await learnerModel.create({
+            const newUser = await lEARNERModel.create({
                 firstName,
                 lastName,
                 email,
                 password: hashedPassword
             })
-            res.json({
-                success: true,
-                message: "Signed in successfully"
-            })
+
+            const token = jwt.sign({
+                "id": newUser._id
+            }, JWT_LEARNER_SECRET, { expiresIn: '1d' })
+
+            // detaching the password filed from the payload before sending as response
+            const { password: pass, ...rest } = newUser._doc
+            rest.success = true
+            res.status(200).cookie('access_token', token, {
+                httpOnly: true
+            }).json(rest)
         } catch (error) {
             res.status(500).json({
                 success: false,
                 message: "Internal server error"
             })
         }
-        
+
 
     }
 }

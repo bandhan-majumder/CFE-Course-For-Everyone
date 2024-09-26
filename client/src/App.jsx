@@ -30,10 +30,9 @@ function App() {
           <Route path="/learner/signin" element={<LearnerSignIn />} />
           <Route path="/learner/dashboard" element={<LearnerDashboard />} />
 
-          {/* Creator auth routes */}
+          {/* Creator routes */}
           <Route path="/creator/signup" element={<CreatorSignUp />} />
           <Route path="/creator/signin" element={<CreatorSignIn />} />
-
           <Route path="/creator/dashboard" element={<CreatorDashboard />} />
         </Routes>
       </div>
