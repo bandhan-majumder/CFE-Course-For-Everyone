@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NavLink } from "react-router-dom";
 
 const LandingPage = () => {
+   const defaultUrl = "https://images.unsplash.com/photo-1727294810277-5da030783146?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   return (
     <div className="container mx-auto px-4">
       {/* Hero Section */}
@@ -19,7 +20,7 @@ const LandingPage = () => {
         <h1 className="text-4xl font-bold mb-4">Welcome to Course For Everyone</h1>
         <p className="text-xl mb-8">Here we bring contents "For everyone by experts"</p>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <NavLink to="/course/preview">
+          <NavLink to="/courses">
             <Button size="lg">Browse Courses</Button>
           </NavLink>
           <NavLink to='/creator/signup'>
@@ -40,6 +41,7 @@ const LandingPage = () => {
           {["Web Dev", "Data Science", "DSA"].map((course, index) => (
             <Card key={index}>
               <CardHeader>
+                <img src={defaultUrl} alt="" />
                 <CardTitle>{course}</CardTitle>
                 <CardDescription>
                   Learn the fundamentals and advanced techniques

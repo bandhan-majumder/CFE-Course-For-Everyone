@@ -5,8 +5,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false);
-
   const navItems = [
     { name: "Home", href: "/" },
     { name: "Courses", href: "/courses" },
@@ -15,66 +13,65 @@ export default function Header() {
   ];
 
   return (
-    <header className="flex justify-between items-center p-4">
-      <div className="flex-1">
-        <NavLink to='/'>
-          <h1 className="text-3xl font-bold">CFE</h1>
-        </NavLink>
-      </div>
-
-      {/* Desktop Navigation */}
-      <nav className="hidden md:flex flex-1 justify-around">
-        <div className="flex space-x-4">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.href}
-              className={({ isActive }) =>
-                `transition-colors hover:text-foreground/80 ${
-                  isActive ? "text-foreground" : "text-foreground/60"
-                }`
-              }
-            >
-              {item.name}
-            </NavLink>
-          ))}
+    <div className="mx-100 bg-yellow-500 px-20 sticky">
+      <header className="flex justify-between items-center p-4">
+        <div className="flex-1 mx-5">
+          <NavLink to="/">
+            <h1 className="text-3xl font-bold">CFE</h1>
+          </NavLink>
         </div>
-      </nav>
 
-      {/* Mobile Navigation Trigger */}
-      <div className="md:hidden flex-1 flex justify-end">
-        <Sheet>
-          <SheetTrigger>
-            <Menu />
-          </SheetTrigger>
-          <SheetContent>
+        <nav className="flex-1 flex justify-around">
+          <div className="flex space-x-4">
             {navItems.map((item) => (
               <NavLink
                 key={item.name}
                 to={item.href}
                 className={({ isActive }) =>
-                  `text-foreground/70 transition-colors hover:text-foreground ${
-                    isActive ? "text-foreground" : ""
+                  `transition-colors hover:text-foreground/80 ${
+                    isActive ? "text-foreground" : "text-foreground/60"
                   }`
                 }
-                onClick={() => setIsOpen(false)}
               >
                 {item.name}
               </NavLink>
             ))}
-            <NavLink to='/learner/signup'>
-              <Button onClick={() => setIsOpen(false)}>Join now</Button>
-            </NavLink>
-          </SheetContent>
-        </Sheet>
-      </div>
+          </div>
+        </nav>
 
-      {/* Join Now Button for Desktop */}
-      <div className="hidden md:flex flex-1 justify-end">
-        <NavLink to='/learner/signup'>
-          <Button>Join now</Button>
-        </NavLink>
-      </div>
-    </header>
+        <div className="flex-1 flex justify-end">
+          <NavLink to="/learner/signup">
+            <Button className="mx-8">Join now</Button>
+          </NavLink>
+        </div>
+      </header>
+    </div>
+  );
+}
+
+function MobileNav({ navItems, setIsOpen }) {
+  return (
+    <Sheet>
+      <SheetTrigger>
+        <Menu />
+      </SheetTrigger>
+      <SheetContent>
+        {navItems.map((item) => (
+          <NavLink
+            key={item.name}
+            to={item.href}
+            className={({ isActive }) =>
+              `text-foreground/70 transition-colors hover:text-foreground ${
+                isActive ? "text-foreground" : ""
+              }`
+            }
+            onClick={() => setIsOpen(false)}
+          >
+            {item.name}
+          </NavLink>
+        ))}
+        <Button onClick={() => setIsOpen(false)}>Join now</Button>
+      </SheetContent>
+    </Sheet>
   );
 }
