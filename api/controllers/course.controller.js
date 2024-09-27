@@ -5,9 +5,6 @@ const purchaseNewCourse = async (req, res, next) => {
     const learnerId = req.learnerId
     const courseId = req.body.courseId
 
-    console.log("Testiiiinng.")
-    console.log(learnerId, courseId)
-
     if(!learnerId){
         res.status(403).res({
             "message": "You are not signed in"

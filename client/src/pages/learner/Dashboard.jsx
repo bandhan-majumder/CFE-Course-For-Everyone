@@ -14,18 +14,16 @@ import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [courseData, setCourseData] = useState([]);
-  console.log(courseData);
   const navigate = useNavigate();
   useEffect(() => {
     async function getAllCourses() {
       try {
         const response = await axios.get("/api/learner/purchases");
-        console.log(response);
         if (response.data.courseData) {
           setCourseData(response.data.courseData);
         }
       } catch (error) {
-        console.log(error);
+        console.log(error)
         if (error.status === 403) {
           alert("You are not signed in as learner");
           navigate("/learner/signin");

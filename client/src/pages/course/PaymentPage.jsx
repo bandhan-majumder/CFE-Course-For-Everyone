@@ -35,31 +35,12 @@ export default function PaymentPage() {
     }
   }, []);
 
-  // const purchaseCourse = async (courseId) => {
-  //   try {
-  //     console.log(courseId);
-  //     const response = await axios.post("/api/course/purchase", {
-  //       courseId: courseId,
-  //     });
-  //     if (response.data.success) {
-  //       navigate("/");
-  //     } else {
-  //       alert("Error happened");
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     navigate("/learner/signin");
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("Attempting to purchase course:", courseId);
       const response = await axios.post("/api/course/purchase", {
         courseId: courseId,
       });
-      console.log("Purchase response:", response.data);
       if (response.data.success) {
         navigate("/learner/dashboard");
       } else {

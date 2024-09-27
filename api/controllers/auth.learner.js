@@ -27,7 +27,6 @@ const signup = async (req, res, next) => {
 
     // if the format is not correct
     if (!safeParsed.success) {
-        console.log(safeParsed.error)
         return res.status(403).json({
             "message": "Invalid format. Make sure you give correct email and password. Password must contain one uppercase, one lowercase, 2 digits, one special character, one opening, one closing bracket, one '?' or '/'",
             "error": safeParsed.error
@@ -191,7 +190,6 @@ const oAuth = async (req, res) => {
 
 const purchasedCourses = async (req, res, next) => {
     const learnerId = req.learnerId
-    console.log("Learner id is : ", learnerId)
 
     if(!learnerId){
         res.status(403).json({

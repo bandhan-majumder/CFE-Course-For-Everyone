@@ -20,7 +20,6 @@ export default function updateCourse() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({courseId: courseId});
-  console.log(formData)
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });

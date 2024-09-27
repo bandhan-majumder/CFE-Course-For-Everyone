@@ -3,10 +3,8 @@ require('dotenv').config({ path: '../.env' });
 const JWT_LEARNER_SECRET = process.env.JWT_LEARNER_SECRET
 
 function learnerMiddleware(req,res,next){
-    console.log(req.cookies)
     const token = req.cookies.access_token; 
     if (!token) {
-        console.log("Yo 1")
         return res.status(403).json({
             "success": false,
             "message": "You are not signed in"

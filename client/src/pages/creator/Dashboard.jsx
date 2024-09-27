@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [courseData, setCourseData] = useState([]);
-  console.log(courseData);
   const navigate = useNavigate();
   useEffect(() => {
     async function getAllCourses() {

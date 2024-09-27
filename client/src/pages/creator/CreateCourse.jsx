@@ -36,11 +36,8 @@ export default function CreateCourse() {
       if(response.data.success){
         alert("Course created successfully")
         navigate("/creator/dashboard")
-      } else {
-        console.log(response)
-      }
+      } 
     } catch (error) {
-      console.log(error)
       navigate('/creator/signin')
     }
   };

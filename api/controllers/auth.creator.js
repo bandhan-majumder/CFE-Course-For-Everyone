@@ -62,7 +62,6 @@ const signup = async (req, res) => {
 
 const signin = async (req, res) => {
     const { email, password } = req.body
-    console.log(email, password)
 
     const creator = await creatorModel.findOne({
         email
@@ -82,7 +81,6 @@ const signin = async (req, res) => {
             creatorId: creator._id
         }, JWT_CREATOR_SECRET)
 
-        console.log("Token is ", token)
         const { password: pass, ...rest } = creator._doc
         rest.success = true
         res.status(200).cookie('access_token', token, {
@@ -198,7 +196,6 @@ const oAuth = async (req, res) => {
 // will have to work on this later for uploading images in firebase
 const createCourse = async (req, res) => {
     const creatorId = req.creatorId
-    console.log("creator id is : ", creatorId)
     const { title, description, imageUrl, price } = req.body
     const course = await courseModel.create({
         title,
