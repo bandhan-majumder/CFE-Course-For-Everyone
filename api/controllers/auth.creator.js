@@ -79,9 +79,10 @@ const signin = async (req, res) => {
 
     if (passCheck) { // if the password matches, return a token
         const token = jwt.sign({
-            id: creator._id
+            creatorId: creator._id
         }, JWT_CREATOR_SECRET)
 
+        console.log("Token is ", token)
         const { password: pass, ...rest } = creator._doc
         rest.success = true
         res.status(200).cookie('access_token', token, {
@@ -175,9 +176,10 @@ const oAuth = async (req, res) => {
             })
 
             const token = jwt.sign({
-                "id": newUser._id
+                adminId: newUser._id
             }, JWT_CREATOR_SECRET, { expiresIn: '1d' })
 
+            console.log("Token inside auth: ", token)
             // detaching the password filed from the payload before sending as response
             const { password: pass, ...rest } = newUser._doc
             rest.success = true
@@ -189,7 +191,6 @@ const oAuth = async (req, res) => {
                 success: false,
                 message: "Error signing up",
                 error: error.message,
-                stack: error.stack
             });
         }
     }
@@ -207,7 +208,7 @@ const createCourse = async (req, res) => {
         creatorId: creatorId // coming from middleware after req.creatorId is set from there
     })
     res.json({
-        "success": true,
+        success: true,
         message: "Course created",
         courseId: course._id
     })

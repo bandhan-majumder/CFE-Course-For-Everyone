@@ -3,7 +3,8 @@ require('dotenv').config({ path: '../.env' });
 const JWT_CREATOR_SECRET = process.env.JWT_CREATOR_SECRET
 
 function creatorMiddleware(req, res, next) {
-    const token = req.cookies.access_token; 
+    const token = req.cookies.access_token;
+    console.log("Token reaching ?" , token)
     if (!token) {
         return res.status(403).json({
             "success": false,
@@ -13,9 +14,11 @@ function creatorMiddleware(req, res, next) {
 
     try {
         const decoded = jwt.verify(token, JWT_CREATOR_SECRET); 
-        req.creatorId = decoded.id;
+        req.creatorId = decoded.creatorId;
         next(); 
     } catch (error) {
+        console.log(error)
+        console.log(token)
         return res.status(403).json({
             "success": false,
             "message": "Invalid token"
