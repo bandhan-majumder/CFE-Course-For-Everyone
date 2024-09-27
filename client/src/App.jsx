@@ -3,7 +3,7 @@ import { useState } from "react";
 import Header from "./components/Header";
 import LearnerSignIn from "./pages/learner/SignIn";
 import LearnerSignUp from "./pages/learner/SignUp";
-import LearnerDashboard from "./pages/learner/Dashboard"
+import LearnerDashboard from "./pages/learner/Dashboard";
 import CreatorSignIn from "./pages/creator/SignIn";
 import CreatorSignUp from "./pages/creator/SignUp";
 import CreatorDashboard from "./pages/creator/Dashboard";
@@ -14,6 +14,7 @@ import Courses from "./pages/viewer/Courses";
 import Contact from "./pages/viewer/Contact";
 import CreateCourse from "./pages/creator/CreateCourse";
 import UpdateCourse from "./pages/creator/UpdateCourse";
+import PaymentPage from "./pages/course/PaymentPage";
 
 function App() {
   return (
@@ -27,7 +28,11 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
 
+          {/* course payment route */}
+          <Route path="/course/payment" element={<PaymentPage />} />
+
           {/* Learner auth routes */}
+
           <Route path="/learner/signup" element={<LearnerSignUp />} />
           <Route path="/learner/signin" element={<LearnerSignIn />} />
           <Route path="/learner/dashboard" element={<LearnerDashboard />} />

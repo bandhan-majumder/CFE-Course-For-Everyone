@@ -20,12 +20,12 @@ const Dashboard = () => {
     async function getAllCourses() {
       try {
         const response = await axios.get("/api/learner/purchases");
-        console.log(response)
-        if(response.data.courseData){
-          setCourseData(response.data.courseData)
+        console.log(response);
+        if (response.data.courseData) {
+          setCourseData(response.data.courseData);
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
         if (error.status === 403) {
           alert("You are not signed in as learner");
           navigate("/learner/signin");
@@ -42,23 +42,20 @@ const Dashboard = () => {
       {/* Hero Section */}
       <section className="text-center py-20">
         <h1 className="text-4xl font-bold mb-4">
-          Thanks for joining us as creator
+          Thanks for joining us as Learner
         </h1>
         <p className="text-xl mb-8">
           Here we bring contents "For everyone by experts"
         </p>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <NavLink to="/courses">
-            <Button size="lg" variant="outline">
-              Browse Courses
+            <Button size="lg">
+              Buy Courses
             </Button>
           </NavLink>
-          <NavLink to="/creator/create/course">
-            <Button size="lg">Create course</Button>
-          </NavLink>
           <NavLink to="/learner/signup">
-            <Button size="lg" variant="outline">
-              Join as Learner
+            <Button size="lg" className='bg-red-600'>
+              Log out
             </Button>
           </NavLink>
         </div>
@@ -82,8 +79,8 @@ const Dashboard = () => {
                   <p>Price: ${course.price}</p>
                 </CardContent>
                 <CardFooter>
-                  <NavLink to={`/creator/update/course?c_id=${course._id}`}>
-                  <Button>Update Course</Button>
+                  <NavLink to="https://youtu.be/dQw4w9WgXcQ?si=o4X4D5SagFfnVAhx">
+                    <Button>Start Now</Button>
                   </NavLink>
                 </CardFooter>
               </Card>

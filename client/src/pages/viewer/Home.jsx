@@ -40,18 +40,6 @@ const LandingPage = () => {
     getAllCourses();
   }, []);
 
-  const purchaseCourse = async (courseId) => {
-    try {
-      const response = await axios.post("/api/course/purchase", { courseId });
-      if (response) {
-        setBoughtCourses(prev => ({ ...prev, [courseId]: true }));
-      }
-    } catch (error) {
-      console.error(error);
-      navigate("/learner/signin");
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -84,47 +72,6 @@ const LandingPage = () => {
       </section>
 
       {/* Featured Courses Section */}
-      {/* <section className="py-16">
-        <h2 className="text-3xl font-bold mb-8 text-center underline">
-          Featured Courses
-        </h2>
-        <div className="flex flex-wrap justify-center gap-6">
-        {courseData.map((course, index) => (
-          index > 4 && (
-            <Card key={course._id} className="flex flex-col w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] max-w-[400px]">
-            <CardHeader className="flex-grow">
-              <div className="aspect-video mb-4">
-                <img 
-                  src={course.imageUrl} 
-                  alt={course.title} 
-                  className="w-full h-full object-cover rounded-md"
-                />
-              </div>
-              <CardTitle className="text-xl mb-2">{course.title}</CardTitle>
-              <CardDescription className="text-sm">{course.description}</CardDescription>
-            </CardHeader>
-            <CardContent className="text-lg font-semibold">
-              Price: ${course.price}
-            </CardContent>
-            <CardFooter>
-              {boughtCourses[course._id] ? (
-                <NavLink to="/api/learner/purchases" className="w-full">
-                  <Button className="w-full">View course</Button>
-                </NavLink>
-              ) : (
-                <Button 
-                  onClick={() => purchaseCourse(course._id)}
-                  className="w-full"
-                >
-                  Enroll Now
-                </Button>
-              )}
-            </CardFooter>
-          </Card>
-          ) 
-        ))}
-      </div>
-      </section> */}
       <section className="py-16">
         <h2 className="text-3xl font-bold mb-8 text-center underline">
           Featured Courses
@@ -149,18 +96,10 @@ const LandingPage = () => {
                   Price: ${course.price}
                 </CardContent>
                 <CardFooter>
-                  {boughtCourses[course._id] ? (
-                    <NavLink to="/api/learner/purchases" className="w-full">
-                      <Button className="w-full">View course</Button>
+                    <NavLink to={`/course/payment?c_id=${course._id}`}
+                    className="w-full">
+                      <Button className="w-full">Enroll now</Button>
                     </NavLink>
-                  ) : (
-                    <Button 
-                      onClick={() => purchaseCourse(course._id)}
-                      className="w-full"
-                    >
-                      Enroll Now
-                    </Button>
-                  )}
                 </CardFooter>
               </Card>
             )
@@ -181,6 +120,14 @@ const LandingPage = () => {
             {
               name: "Bob Smith",
               text: "I learned more in 6 weeks than in my entire college program...",
+            },
+            {
+              name: "Misan Kalip",
+              text: "Best investment ever done...",
+            },
+            {
+              name: "Sai",
+              text: "I have never been transformed so much before...",
             },
           ].map((testimonial, index) => (
             <Card key={index}>
