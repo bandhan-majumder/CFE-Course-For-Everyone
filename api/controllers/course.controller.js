@@ -1,8 +1,18 @@
+const learner = require('../middleware/learner.js')
 const { purchaseModel, courseModel } = require('../models/db.model.js')
 
 const purchaseNewCourse = async (req, res, next) => {
     const learnerId = req.learnerId
     const courseId = req.body.courseId
+
+    console.log("Testiiiinng.")
+    console.log(learnerId, courseId)
+
+    if(!learnerId){
+        res.status(403).res({
+            "message": "You are not signed in"
+        })
+    }
 
     const courseExists = await courseModel.findOne({
         _id: courseId
@@ -22,7 +32,7 @@ const purchaseNewCourse = async (req, res, next) => {
         courseId
     })
 
-    res.json({
+    res.status(200).json({
         "success": true,
         purchasedCourse
     })

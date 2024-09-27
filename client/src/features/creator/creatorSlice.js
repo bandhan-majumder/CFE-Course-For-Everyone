@@ -14,6 +14,7 @@ const creatorSlice = createSlice({
         clearError: (state) => {
             state.error = null,
             state.signUpError = null;
+            state.loading = null
         },
         signInStart: (state) => {
             state.loading = true

@@ -76,7 +76,7 @@ const signin = async (req, res, next) => {
 
         if (passCheck) {
             const token = jwt.sign({
-                id: learner._id
+                learnerId: learner._id
             }, JWT_LEARNER_SECRET)
 
             const { password: pass, ...rest } = learner._doc
@@ -171,7 +171,7 @@ const oAuth = async (req, res) => {
             })
 
             const token = jwt.sign({
-                "id": newUser._id
+                learnerId: newUser._id
             }, JWT_LEARNER_SECRET, { expiresIn: '1d' })
 
             // detaching the password filed from the payload before sending as response
@@ -192,9 +192,26 @@ const oAuth = async (req, res) => {
 const purchasedCourses = async (req, res, next) => {
     const learnerId = req.learnerId
 
+    console.log(token)
+    console.log(learnerId)
+
+    if(!learnerId){
+        res.status(403).json({
+            success: false,
+            "message": "Sign in as learner to see your purchased courses"
+        })
+    }
+
     const purchasedCourses = await purchaseModel.find({
-        learnerId: learnerId
+        learnerId
     })
+
+    if(!purchasedCourses){
+        res.json({
+            success: true,
+            "message": "You have not bought any courses yet"
+        })
+    }
 
     const courseData = await courseModel.find({
         _id: { $in: purchasedCourses.map(x => x.courseId) }

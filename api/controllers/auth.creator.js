@@ -107,7 +107,7 @@ const oAuth = async (req, res) => {
     // if found one, directly log them in
     if (accountExists) {
         res.json({
-            user: accountExists,
+            "user": accountExists,
             success: true,
             message: "Signed in successfully"
         })

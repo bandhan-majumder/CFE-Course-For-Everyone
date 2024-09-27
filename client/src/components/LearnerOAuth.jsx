@@ -64,14 +64,6 @@ export default function LearnerOAuth() {
 
   return (
     <div>
-      {errorMessage && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{errorMessage}</AlertDescription>
-        </Alert>
-      )}
-
       <Button
         variant="outline"
         className="w-full bg-red-600 text-white rounded-full"
