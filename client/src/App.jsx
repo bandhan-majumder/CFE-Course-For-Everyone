@@ -13,6 +13,7 @@ import About from "./pages/viewer/About";
 import Courses from "./pages/viewer/Courses";
 import Contact from "./pages/viewer/Contact";
 import CreateCourse from "./pages/creator/CreateCourse";
+import UpdateCourse from "./pages/creator/UpdateCourse";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/creator/signin" element={<CreatorSignIn />} />
           <Route path="/creator/dashboard" element={<CreatorDashboard />} />
           <Route path="/creator/create/course" element={<CreateCourse />} />
+          <Route path="/creator/update/course" element={<UpdateCourse />} />
         </Routes>
       </div>
     </BrowserRouter>

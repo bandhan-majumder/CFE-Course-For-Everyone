@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -8,11 +9,61 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import axios from "axios";
+import Spinner from "@/components/ui/spinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NavLink } from "react-router-dom";
 
 const LandingPage = () => {
-   const defaultUrl = "https://images.unsplash.com/photo-1727294810277-5da030783146?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  const [courseData, setCourseData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [boughtCourses, setBoughtCourses] = useState({});
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function getAllCourses() {
+      try {
+        const response = await axios.get("/api/course/preview");
+        if (response.data && response.data.courses) {
+          setCourseData(response.data.courses);
+        } else {
+          throw new Error("No courses found.");
+        }
+      } catch (err) {
+        setError(err.message || "An error occurred while fetching courses.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    getAllCourses();
+  }, []);
+
+  const purchaseCourse = async (courseId) => {
+    try {
+      const response = await axios.post("/api/course/purchase", { courseId });
+      if (response) {
+        setBoughtCourses(prev => ({ ...prev, [courseId]: true }));
+      }
+    } catch (error) {
+      console.error(error);
+      navigate("/learner/signin");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="large" className="from-white to-green-600" />
+        <p className="ml-4 text-xl">Loading courses...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="text-center text-red-500 text-xl">{error}</div>;
+  }
   return (
     <div className="container mx-auto px-4">
       {/* Hero Section */}
@@ -33,33 +84,89 @@ const LandingPage = () => {
       </section>
 
       {/* Featured Courses Section */}
+      {/* <section className="py-16">
+        <h2 className="text-3xl font-bold mb-8 text-center underline">
+          Featured Courses
+        </h2>
+        <div className="flex flex-wrap justify-center gap-6">
+        {courseData.map((course, index) => (
+          index > 4 && (
+            <Card key={course._id} className="flex flex-col w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] max-w-[400px]">
+            <CardHeader className="flex-grow">
+              <div className="aspect-video mb-4">
+                <img 
+                  src={course.imageUrl} 
+                  alt={course.title} 
+                  className="w-full h-full object-cover rounded-md"
+                />
+              </div>
+              <CardTitle className="text-xl mb-2">{course.title}</CardTitle>
+              <CardDescription className="text-sm">{course.description}</CardDescription>
+            </CardHeader>
+            <CardContent className="text-lg font-semibold">
+              Price: ${course.price}
+            </CardContent>
+            <CardFooter>
+              {boughtCourses[course._id] ? (
+                <NavLink to="/api/learner/purchases" className="w-full">
+                  <Button className="w-full">View course</Button>
+                </NavLink>
+              ) : (
+                <Button 
+                  onClick={() => purchaseCourse(course._id)}
+                  className="w-full"
+                >
+                  Enroll Now
+                </Button>
+              )}
+            </CardFooter>
+          </Card>
+          ) 
+        ))}
+      </div>
+      </section> */}
       <section className="py-16">
         <h2 className="text-3xl font-bold mb-8 text-center underline">
           Featured Courses
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {["Web Dev", "Data Science", "DSA"].map((course, index) => (
-            <Card key={index}>
-              <CardHeader>
-                <img src={defaultUrl} alt="" />
-                <CardTitle>{course}</CardTitle>
-                <CardDescription>
-                  Learn the fundamentals and advanced techniques
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>
-                  This course covers everything about {course.toLowerCase()}...
-                </p>
-              </CardContent>
-              <CardFooter>
-                <Button>Enroll Now</Button>
-              </CardFooter>
-            </Card>
+        <div className="flex flex-wrap justify-center gap-6">
+          {courseData.map((course, index) => (
+            // render only first 4 courses in the db
+            index < 4 && (
+              <Card key={course._id} className="flex flex-col w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] max-w-[400px]">
+                <CardHeader className="flex-grow">
+                  <div className="aspect-video mb-4">
+                    <img 
+                      src={course.imageUrl} 
+                      alt={course.title} 
+                      className="w-full h-full object-cover rounded-md"
+                    />
+                  </div>
+                  <CardTitle className="text-xl mb-2">{course.title}</CardTitle>
+                  <CardDescription className="text-sm">{course.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="text-lg font-semibold">
+                  Price: ${course.price}
+                </CardContent>
+                <CardFooter>
+                  {boughtCourses[course._id] ? (
+                    <NavLink to="/api/learner/purchases" className="w-full">
+                      <Button className="w-full">View course</Button>
+                    </NavLink>
+                  ) : (
+                    <Button 
+                      onClick={() => purchaseCourse(course._id)}
+                      className="w-full"
+                    >
+                      Enroll Now
+                    </Button>
+                  )}
+                </CardFooter>
+              </Card>
+            )
           ))}
         </div>
       </section>
-
       {/* Testimonials Section */}
       <section className="py-16 bg-gray-100">
         <h2 className="text-3xl font-bold mb-8 text-center">

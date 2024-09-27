@@ -231,24 +231,28 @@ const updateCourse = async (req, res) => {
     }
 
     // if course exists, check if the creator has created that or not
-    const course = await courseModel.updateOne({
+
+    const courseExists = await courseModel.findOne({
         _id: courseId,
         creatorId: creatorId
-    },
-        {
-            // update 
-            title: title,
-            description: description,
-            imageUrl: imageUrl,
-            price: price
-        }
-    )
+    })
 
-    if (course.matchedCount == 0) {
+    if (!courseExists) {
         res.status(403).json({
-            "message": "You are not authorized to update course"
+            "success": false,
+            "message": "Either course does not exists or you are not authorized to update course"
         })
     }
+
+    // update course
+    const course = await courseExists.updateOne({
+            // update the new provided values. If not provided, keep it the same
+            title: title || courseExists.title,
+            description: description || courseExists.description,
+            imageUrl: imageUrl || courseExists.imageUrl,
+            price: price || courseExists.price
+        }
+    )
 
     res.json({
         "success": true,

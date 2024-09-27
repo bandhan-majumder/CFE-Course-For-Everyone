@@ -73,14 +73,16 @@ const Dashboard = () => {
               <Card key={index}>
                 <CardHeader>
                   <img src={course.imageUrl} alt="" />
-                  <CardTitle>{course.title}</CardTitle>
+                  <CardTitle className="sm:text-lg">{course.title}</CardTitle>
                   <CardDescription>{course.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p>Price: {course.price} $</p>
+                  <p>Price: ${course.price}</p>
                 </CardContent>
                 <CardFooter>
+                  <NavLink to={`/creator/update/course?c_id=${course._id}`}>
                   <Button>Update Course</Button>
+                  </NavLink>
                 </CardFooter>
               </Card>
             ))}
