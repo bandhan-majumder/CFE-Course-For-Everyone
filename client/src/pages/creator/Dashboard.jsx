@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,10 +9,32 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-  const defaultUrl =
-    "https://images.unsplash.com/photo-1727294810277-5da030783146?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+  const [courseData, setCourseData] = useState([]);
+  console.log(courseData);
+  const navigate = useNavigate();
+  useEffect(() => {
+    async function getAllCourses() {
+      try {
+        const response = await axios.get("/api/creator/course/bulk");
+        if (response.data && response.data.allCourses.length > 0) {
+          setCourseData(response.data.allCourses);
+        }
+      } catch (error) {
+        if (error.status === 403) {
+          alert("You are not signed in as admin");
+          navigate("/creator/signin");
+        } else {
+          alert("Error fetching courses...");
+        }
+      }
+    }
+    getAllCourses();
+  }, []);
+
   return (
     <div className="container mx-auto px-4">
       {/* Hero Section */}
@@ -25,7 +47,9 @@ const Dashboard = () => {
         </p>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <NavLink to="/courses">
-            <Button size="lg" variant="outline">Browse Courses</Button>
+            <Button size="lg" variant="outline">
+              Browse Courses
+            </Button>
           </NavLink>
           <NavLink to="/creator/create/course">
             <Button size="lg">Create course</Button>
@@ -43,27 +67,34 @@ const Dashboard = () => {
         <h2 className="text-3xl font-bold mb-8 text-center underline">
           Your Courses
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {["Web Dev", "Data Science", "DSA"].map((course, index) => (
-            <Card key={index}>
-              <CardHeader>
-                <img src={defaultUrl} alt="" />
-                <CardTitle>{course}</CardTitle>
-                <CardDescription>
-                  Learn the fundamentals and advanced techniques
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>
-                  This course covers everything about {course.toLowerCase()}...
-                </p>
-              </CardContent>
-              <CardFooter>
-                <Button>Update Course</Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+        {courseData.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {courseData.map((course, index) => (
+              <Card key={index}>
+                <CardHeader>
+                  <img src={course.imageUrl} alt="" />
+                  <CardTitle>{course.title}</CardTitle>
+                  <CardDescription>{course.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p>Price: {course.price} $</p>
+                </CardContent>
+                <CardFooter>
+                  <Button>Update Course</Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center">
+            <div className="py-2">Your have not created any courses yet.</div>
+            <div>
+              <NavLink to="/creator/create/course">
+                <Button size="lg">Create your first course</Button>
+              </NavLink>
+            </div>
+          </div>
+        )}
       </section>
     </div>
   );

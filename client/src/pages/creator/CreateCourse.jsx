@@ -27,7 +27,6 @@ export default function CreateCourse() {
     e.preventDefault();
 
     if (!formData || !formData.title || !formData.description || !formData.imageUrl || !formData.price) {
-        console.log(formData)
         alert("All the fields are required")
       return;
     }

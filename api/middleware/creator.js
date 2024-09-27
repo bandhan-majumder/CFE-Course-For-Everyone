@@ -4,7 +4,7 @@ const JWT_CREATOR_SECRET = process.env.JWT_CREATOR_SECRET
 
 function creatorMiddleware(req, res, next) {
     const token = req.cookies.access_token;
-    console.log("Token reaching ?" , token)
+    console.log("token is ", token)
     if (!token) {
         return res.status(403).json({
             "success": false,
@@ -14,6 +14,8 @@ function creatorMiddleware(req, res, next) {
 
     try {
         const decoded = jwt.verify(token, JWT_CREATOR_SECRET); 
+        console.log(decoded)
+        console.log("id is ", decoded.creatorId)
         req.creatorId = decoded.creatorId;
         next(); 
     } catch (error) {

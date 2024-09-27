@@ -176,10 +176,9 @@ const oAuth = async (req, res) => {
             })
 
             const token = jwt.sign({
-                adminId: newUser._id
+                creatorId: newUser._id
             }, JWT_CREATOR_SECRET, { expiresIn: '1d' })
 
-            console.log("Token inside auth: ", token)
             // detaching the password filed from the payload before sending as response
             const { password: pass, ...rest } = newUser._doc
             rest.success = true
@@ -199,6 +198,7 @@ const oAuth = async (req, res) => {
 // will have to work on this later for uploading images in firebase
 const createCourse = async (req, res) => {
     const creatorId = req.creatorId
+    console.log("creator id is : ", creatorId)
     const { title, description, imageUrl, price } = req.body
     const course = await courseModel.create({
         title,

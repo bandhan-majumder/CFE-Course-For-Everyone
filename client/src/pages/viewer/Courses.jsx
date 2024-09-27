@@ -40,62 +40,68 @@ export default function Courses() {
 
   const purchaseCourse = async (courseId) => {
     try {
-      console.log(courseId)
       const response = await axios.post("/api/course/purchase", { courseId });
-
       if (response) {
         setBoughtCourses(prev => ({ ...prev, [courseId]: true }));
       }
     } catch (error) {
-      // user is not signed in
-      console.log(error)
-      navigate("/learner/signin")
+      console.error(error);
+      navigate("/learner/signin");
     }
   };
 
   if (loading) {
     return (
-      <div className="text-center text-4xl">
-        <Spinner size="large" className="from-white to-green-600 my-5" />
-        <p className="my-5">Loading courses...</p>
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="large" className="from-white to-green-600" />
+        <p className="ml-4 text-xl">Loading courses...</p>
       </div>
     );
   }
 
   if (error) {
-    return <div className="text-center text-red-500">{error}</div>;
+    return <div className="text-center text-red-500 text-xl">{error}</div>;
   }
 
   return (
-    <div>
-      <section className="py-16">
-        <h2 className="text-3xl font-bold mb-8 text-center underline">
-          All Available Courses
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {courseData.map((course) => (
-            <Card key={course._id} className="w-70 h-full">
-              <CardHeader>
-                <img src={course.imageUrl} alt={course.title} className="w-48 h-48 object-cover mb-4" />
-                <CardTitle>{course.title}</CardTitle>
-                <CardDescription>{course.description}</CardDescription>
-              </CardHeader>
-              <CardContent>Price: ${course.price}</CardContent>
-              <CardFooter>
-                {boughtCourses[course._id] ? (
-                  <NavLink to="/api/learner/purchases">
-                    <Button>View course</Button>
-                  </NavLink>
-                ) : (
-                  <Button onClick={() => purchaseCourse(course._id)}>
-                    Enroll Now
-                  </Button>
-                )}
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </section>
+    <div className="container mx-auto px-4 py-8">
+      <h2 className="text-3xl font-bold mb-8 text-center">
+        All Available Courses
+      </h2>
+      <div className="flex flex-wrap justify-center gap-6">
+        {courseData.map((course) => (
+          <Card key={course._id} className="flex flex-col w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] max-w-[400px]">
+            <CardHeader className="flex-grow">
+              <div className="aspect-video mb-4">
+                <img 
+                  src={course.imageUrl} 
+                  alt={course.title} 
+                  className="w-full h-full object-cover rounded-md"
+                />
+              </div>
+              <CardTitle className="text-xl mb-2">{course.title}</CardTitle>
+              <CardDescription className="text-sm">{course.description}</CardDescription>
+            </CardHeader>
+            <CardContent className="text-lg font-semibold">
+              Price: ${course.price}
+            </CardContent>
+            <CardFooter>
+              {boughtCourses[course._id] ? (
+                <NavLink to="/api/learner/purchases" className="w-full">
+                  <Button className="w-full">View course</Button>
+                </NavLink>
+              ) : (
+                <Button 
+                  onClick={() => purchaseCourse(course._id)}
+                  className="w-full"
+                >
+                  Enroll Now
+                </Button>
+              )}
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
