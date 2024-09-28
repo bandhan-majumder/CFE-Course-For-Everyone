@@ -5,8 +5,11 @@ import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth'
 import { useNavigate } from "react-router-dom";
 import { app } from "@/firebase";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { googleSignInSuccess } from "@/features/learner/learnerSlice";
 
 export default function LearnerOAuth() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleGoogleSignIn = async () => {
     const auth = getAuth(app)
@@ -23,6 +26,7 @@ export default function LearnerOAuth() {
 
       if(response.data.success){
         alert("Signed in successfully")
+        dispatch(googleSignInSuccess(response.data))
         navigate("/learner/dashboard")
       } else {
         alert("Error signing in with Google:");

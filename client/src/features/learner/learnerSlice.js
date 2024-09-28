@@ -16,6 +16,7 @@ const learnerSlice = createSlice({
             state.error = null
         },
         signInSuccess: (state, action) => {
+            console.log("Normal learner sign in ", action.payload)
             state.currentUser = action.payload,
                 state.loading = false,
                 state.error = null
@@ -29,9 +30,13 @@ const learnerSlice = createSlice({
             state.error = null,
             state.signUpError = null;
         },
+        googleSignInSuccess: (state, action) => {
+            console.log("Google learner sign in ", action.payload)
+            state.currentUser = action.payload
+        }
     }
 });
 
-export const { signInStart, signInFailure, signInSuccess, clearError} = learnerSlice.actions
+export const { signInStart, signInFailure, signInSuccess, clearError, googleSignInSuccess} = learnerSlice.actions
 
 export default learnerSlice.reducer; //
