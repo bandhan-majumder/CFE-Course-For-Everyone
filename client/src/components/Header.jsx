@@ -5,6 +5,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import UserProfileButton from "./UserProfileButton";
 
+
 export default function Header() {
   const navItems = [
     { name: "Home", href: "/" },
@@ -39,7 +40,6 @@ export default function Header() {
             ))}
           </div>
         </nav>
-
         <div className="flex-1 flex justify-end">
           <UserProfileButton />
         </div>

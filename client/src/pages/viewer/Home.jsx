@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import {
@@ -20,7 +20,6 @@ import JoinAsOption from "@/components/JoinAsOption";
 const LandingPage = () => {
   const [courseData, setCourseData] = useState([]);
   const currentLearner = useSelector((state) => state.learner.currentLearner);
-  const currentCreator = useSelector((state) => state.creator.currentCreator);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -62,8 +61,12 @@ const LandingPage = () => {
     <div className="container mx-auto px-4">
       {/* Hero Section */}
       <section className="text-center py-20">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Course For Everyone</h1>
-        <p className="text-xl mb-8">Here we bring contents "For everyone by experts"</p>
+        <h1 className="text-4xl font-bold mb-4">
+          Welcome to Course For Everyone
+        </h1>
+        <p className="text-xl mb-8">
+          Here we bring contents "For everyone by experts"
+        </p>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <NavLink to="/courses">
             <Button size="lg">Browse Courses</Button>
@@ -79,33 +82,49 @@ const LandingPage = () => {
           Featured Courses
         </h2>
         <div className="flex flex-wrap justify-center gap-6">
-          {courseData.map((course, index) => (
-            // render only first 4 courses in the db
-            index < 4 && (
-              <Card key={course._id} className="flex flex-col w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] max-w-[400px]">
-                <CardHeader className="flex-grow">
-                  <div className="aspect-video mb-4">
-                    <img 
-                      src={course.imageUrl} 
-                      alt={course.title} 
-                      className="w-full h-full object-cover rounded-md"
-                    />
-                  </div>
-                  <CardTitle className="text-xl mb-2">{course.title}</CardTitle>
-                  <CardDescription className="text-sm">{course.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="text-lg font-semibold">
-                  Price: ${course.price}
-                </CardContent>
-                <CardFooter>
-                    <NavLink to={`/course/payment?c_id=${course._id}`}
-                    className="w-full">
-                      <Button className="w-full">Enroll now</Button>
-                    </NavLink>
-                </CardFooter>
-              </Card>
-            )
-          ))}
+          {courseData.map(
+            (course, index) =>
+              // render only first 4 courses in the db
+              index < 4 && (
+                <Card
+                  key={course._id}
+                  className="flex flex-col w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] max-w-[400px]"
+                >
+                  <CardHeader className="flex-grow">
+                    <div className="aspect-video mb-4">
+                      <img
+                        src={course.imageUrl}
+                        alt={course.title}
+                        className="w-full h-full object-cover rounded-md"
+                      />
+                    </div>
+                    <CardTitle className="text-xl mb-2">
+                      {course.title}
+                    </CardTitle>
+                    <CardDescription className="text-sm">
+                      {course.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-lg font-semibold">
+                    Price: ${course.price}
+                  </CardContent>
+                  <CardFooter>
+                    {currentLearner ? (
+                      <NavLink
+                        to={`/course/payment?c_id=${course._id}`}
+                        className="w-full"
+                      >
+                        <Button className="w-full">Enroll now</Button>
+                      </NavLink>
+                    ) : (
+                      <NavLink to={"/learner/signin"} className="w-full">
+                        <Button className="w-full">Enroll now</Button>
+                      </NavLink>
+                    )}
+                  </CardFooter>
+                </Card>
+              )
+          )}
         </div>
       </section>
       {/* Testimonials Section */}
@@ -139,12 +158,6 @@ const LandingPage = () => {
                     <AvatarImage
                       src={`https://api.dicebear.com/6.x/initials/svg?seed=${testimonial.name}`}
                     />
-                    <AvatarFallback>
-                      {testimonial.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
                   </Avatar>
                   <div>
                     <CardTitle>{testimonial.name}</CardTitle>

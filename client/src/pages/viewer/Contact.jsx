@@ -3,20 +3,23 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea"; 
 import { useForm } from "react-hook-form";
+import { AiFillGithub } from "react-icons/ai";
+import { AiOutlineTwitter } from "react-icons/ai";
+import { AiFillLinkedin } from "react-icons/ai";
+import { NavLink } from "react-router-dom";
 
 const Contact = () => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
-    // Handle form submission logic (e.g., send data to an API)
-    console.log(data);
+    alert("Message sent!")
   };
 
   return (
     <div className="container mx-auto py-16">
       <h1 className="text-4xl font-bold text-center mb-8">Get in Touch</h1>
       <p className="text-lg text-center mb-12">
-        Feel free to leave any inquiries below or give us a call to speak with our helpful team.
+        Feel free to leave any inquiries below.
       </p>
 
       <div className="flex justify-center">
@@ -54,10 +57,17 @@ const Contact = () => {
       </div>
 
       <footer className="mt-16 text-center">
-        <h2 className="text-xl font-semibold">Contact Information</h2>
-        <p>📍 Address: 123 Main St, Anytown, USA</p>
-        <p>📞 Phone: (123) 456-7890</p>
-        <p>✉️ Email: info@yourdomain.com</p>
+      <div className="flex justify-center space-x-4 py-4">
+      <NavLink to='https://github.com/bandhan-majumder/CFE-Course-For-Everyone' className="flex items-center bg-gray-800 text-white rounded-lg p-2 hover:bg-gray-700 transition">
+        <AiFillGithub className="h-10 w-10 mr-2" />
+      </NavLink>
+      <NavLink to='https://x.com/@MEbandhan' className="flex items-center bg-gray-800 text-white rounded-lg p-2 hover:bg-gray-700 transition">
+        <AiOutlineTwitter className="h-10 w-10 mr-2" />
+      </NavLink>
+      <NavLink to='https://www.linkedin.com/in/bandhan-majumder-5a10a1248/' className="flex items-center bg-gray-800 text-white rounded-lg p-2 hover:bg-gray-700 transition">
+        <AiFillLinkedin className="h-10 w-10 mr-2" />
+      </NavLink>
+    </div>
       </footer>
     </div>
   );

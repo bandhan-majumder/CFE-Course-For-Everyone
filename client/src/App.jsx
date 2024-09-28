@@ -15,6 +15,7 @@ import Contact from "./pages/viewer/Contact";
 import CreateCourse from "./pages/creator/CreateCourse";
 import UpdateCourse from "./pages/creator/UpdateCourse";
 import PaymentPage from "./pages/course/PaymentPage";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route path="/creator/create/course" element={<CreateCourse />} />
             <Route path="/creator/update/course" element={<UpdateCourse />} />
           </Routes>
+          <Footer />
         </div>
       </BrowserRouter>
   );

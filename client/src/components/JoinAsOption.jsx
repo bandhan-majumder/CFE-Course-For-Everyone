@@ -10,7 +10,7 @@ const JoinAsOption = () => {
   if (currentLearner) {
     return (
       <NavLink to="/creator/signup">
-      <Button className="mx-8">Join as creator</Button>
+      <Button className="mx-8" variant="outline">Join as creator</Button>
     </NavLink>
     );
   }
@@ -18,14 +18,14 @@ const JoinAsOption = () => {
   if (currentCreator) {
     return (
       <NavLink to="/learner/signin">
-      <Button className="mx-8">Join as Learner</Button>
+      <Button className="mx-8" variant="outline">Join as Learner</Button>
     </NavLink>
     );
   }
 
   return (
     <NavLink to="/learner/signup">
-      <Button className="mx-8">Join as Learner</Button>
+      <Button className="mx-8" variant="outline">Join as Learner</Button>
     </NavLink>
   );
 };

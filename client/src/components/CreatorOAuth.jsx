@@ -27,7 +27,7 @@ export default function CreatorOAuth() {
       if(response.data.success){
         dispatch(googleSignInSuccess(response.data))
         alert("Signed in successfully")
-        navigate("/creator/dashboard")
+        navigate("/")
       } else {
         alert("Error signing in with Google:");
       }

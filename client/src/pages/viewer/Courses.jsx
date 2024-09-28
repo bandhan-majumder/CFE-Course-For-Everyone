@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import axios from "axios";
+import { useSelector } from "react-redux";
 import Spinner from "@/components/ui/spinner";
 import { NavLink } from "react-router-dom";
 
@@ -16,6 +17,7 @@ export default function Courses() {
   const [courseData, setCourseData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const currentLearner = useSelector((state) => state.learner.currentLearner);
  
   useEffect(() => {
     async function getAllCourses() {
@@ -50,7 +52,7 @@ export default function Courses() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold mb-8 text-center">
+      <h2 className="text-3xl font-bold mb-8 text-center underline mt-3">
         All Available Courses
       </h2>
       <div className="flex flex-wrap justify-center gap-6">
@@ -76,10 +78,19 @@ export default function Courses() {
               Price: ${course.price}
             </CardContent>
             <CardFooter>
-              <NavLink to={`/course/payment?c_id=${course._id}`}>
-                <Button className="w-full">Enroll Now</Button>
-              </NavLink>
-            </CardFooter>
+                    {currentLearner ? (
+                      <NavLink
+                        to={`/course/payment?c_id=${course._id}`}
+                        className="w-full"
+                      >
+                        <Button className="w-full">Enroll now</Button>
+                      </NavLink>
+                    ) : (
+                      <NavLink to={"/learner/signin"} className="w-full">
+                        <Button className="w-full">Enroll now</Button>
+                      </NavLink>
+                    )}
+                  </CardFooter>
           </Card>
         ))}
       </div>

@@ -54,7 +54,7 @@ export default function SignIn() {
 
       if (response.data.success) {
         dispatch(signInSuccess(response.data));
-        navigate("/creator/dashboard");
+        navigate("/");
       } else {
         dispatch(signInFailure(response.data.message || "Internal server error"));
       }
