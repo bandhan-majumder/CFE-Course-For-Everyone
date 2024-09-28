@@ -37,16 +37,10 @@ app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
 // match one above, send back React's index.html file.
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'error.html'));
+    res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
-    const message = err.message || 'Internal Server Error';
-    res.status(statusCode).json({
-        success: false,
-        statusCode,
-        message
-    });
+    res.sendFile(path.join(__dirname), "..", "client", "dist", "error.html")
 });
