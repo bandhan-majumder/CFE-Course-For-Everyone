@@ -45,10 +45,14 @@ const creatorSlice = createSlice({
             state.currentUser = action.payload,
             state.loading = false,
             state.signUpError = action.payload
+        },
+        googleSignInSuccess: (state, action) => {
+            console.log("Google learner sign in ", action.payload)
+            state.currentUser = action.payload
         }
     }
 });
 
-export const { signInStart, signInFailure, signInSuccess, signUpStart, signUpSuccess, signUpFailure, clearError } = creatorSlice.actions
+export const { signInStart, signInFailure, signInSuccess, signUpStart, signUpSuccess, signUpFailure, googleSignInSuccess, clearError } = creatorSlice.actions
 
 export default creatorSlice.reducer; //

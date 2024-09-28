@@ -5,8 +5,11 @@ import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth'
 import { useNavigate } from "react-router-dom";
 import { app } from "@/firebase";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { googleSignInSuccess } from "@/features/creator/creatorSlice";
 
 export default function CreatorOAuth() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleGoogleSignIn = async () => {
     const auth = getAuth(app)
@@ -22,6 +25,7 @@ export default function CreatorOAuth() {
       })
 
       if(response.data.success){
+        dispatch(googleSignInSuccess(response.data))
         alert("Signed in successfully")
         navigate("/creator/dashboard")
       } else {
