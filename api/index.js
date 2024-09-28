@@ -11,9 +11,13 @@ const cookieParser = require('cookie-parser');
 const app = express()
 app.use(cookieParser());
 
+const port = process.env.PORT || 3000; // any available port or 3000
+
 async function main(){
     await mongoose.connect(MONGO_URL)
-    app.listen(3000)
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
 }
 main()
 
