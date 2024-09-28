@@ -172,19 +172,6 @@ const LandingPage = () => {
           ))}
         </div>
       </section>
-
-      {/* Call to Action Section */}
-      <section className="text-center py-20">
-        <h2 className="text-3xl font-bold mb-4">Ready to Start Learning?</h2>
-        <p className="text-xl mb-8">
-          Join thousands of students already learning on our platform
-        </p>
-        <NavLink to="/learner/signup">
-          <Button size="lg" variant="outline">
-            Sign Up Now
-          </Button>
-        </NavLink>
-      </section>
     </div>
   );
 };
