@@ -103,13 +103,21 @@ const oAuth = async (req, res) => {
         email
     })
 
-    // if found one, directly log them in
+    // if found one, set cookie
     if (accountExists) {
-        res.json({
-            "user": accountExists,
-            success: true,
-            message: "Signed in successfully"
-        })
+        // create token
+        const token = jwt.sign({
+            creatorId: accountExists._id
+        }, JWT_CREATOR_SECRET, { expiresIn: '1d' })
+
+        // detach the password
+        const { password: pass, ...rest } = accountExists._doc
+        rest.success = true
+
+        // send cookie
+        res.status(200).cookie('access_token', token, {
+            httpOnly: true
+        }).json(rest)
     } else { // if the account does not exist, create one
 
         // generate a random password
@@ -177,7 +185,6 @@ const oAuth = async (req, res) => {
                 creatorId: newUser._id
             }, JWT_CREATOR_SECRET, { expiresIn: '1d' })
 
-            // detaching the password filed from the payload before sending as response
             const { password: pass, ...rest } = newUser._doc
             rest.success = true
             res.status(200).cookie('access_token', token, {
@@ -243,12 +250,12 @@ const updateCourse = async (req, res) => {
 
     // update course
     const course = await courseExists.updateOne({
-            // update the new provided values. If not provided, keep it the same
-            title: title || courseExists.title,
-            description: description || courseExists.description,
-            imageUrl: imageUrl || courseExists.imageUrl,
-            price: price || courseExists.price
-        }
+        // update the new provided values. If not provided, keep it the same
+        title: title || courseExists.title,
+        description: description || courseExists.description,
+        imageUrl: imageUrl || courseExists.imageUrl,
+        price: price || courseExists.price
+    }
     )
 
     res.json({

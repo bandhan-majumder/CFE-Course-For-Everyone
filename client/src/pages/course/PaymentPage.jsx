@@ -47,12 +47,8 @@ export default function PaymentPage() {
         alert("Error: " + (response.data.message || "Unknown error occurred"));
       }
     } catch (error) {
-      console.error("Purchase error:", error.response ? error.response.data : error.message);
-      if (error.response && error.response.status === 401) {
-        navigate("/learner/signin");
-      } else {
-        alert("Error: " + (error.response ? error.response.data.message : error.message));
-      }
+      alert("Sign in to your learner's account first")
+      navigate('/learner/signin')
     }
   };
 

@@ -101,11 +101,15 @@ const oAuth = async (req, res) => {
 
     // if found one, directly log them in
     if (accountExists) {
-        res.json({
-            user: accountExists,
-            success: true,
-            message: "Signed in successfully"
-        })
+        const token = jwt.sign({
+            learnerId: accountExists._id
+        }, JWT_LEARNER_SECRET, { expiresIn: '1d' })
+        const { password: pass, ...rest } = accountExists._doc
+        rest.success = true
+        res.status(200).cookie('access_token', token, {
+            httpOnly: true
+        }).json(rest)
+
     } else { // if the account does not exist, create one
 
         // generate a random password
@@ -191,7 +195,7 @@ const oAuth = async (req, res) => {
 const purchasedCourses = async (req, res, next) => {
     const learnerId = req.learnerId
 
-    if(!learnerId){
+    if (!learnerId) {
         res.status(403).json({
             success: false,
             "message": "Sign in as learner to see your purchased courses"
@@ -202,7 +206,7 @@ const purchasedCourses = async (req, res, next) => {
         learnerId
     })
 
-    if(!purchasedCourses){
+    if (!purchasedCourses) {
         res.json({
             success: true,
             "message": "You have not bought any courses yet"

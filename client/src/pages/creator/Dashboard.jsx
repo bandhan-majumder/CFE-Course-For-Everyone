@@ -19,10 +19,12 @@ const Dashboard = () => {
     async function getAllCourses() {
       try {
         const response = await axios.get("/api/creator/course/bulk");
+        console.log("r",response)
         if (response.data && response.data.allCourses.length > 0) {
           setCourseData(response.data.allCourses);
         }
       } catch (error) {
+        console.log("e",error)
         if (error.status === 403) {
           alert("You are not signed in as admin");
           navigate("/creator/signin");
