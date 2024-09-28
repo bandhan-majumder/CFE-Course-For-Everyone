@@ -7,7 +7,7 @@ git clone "https://github.com/bandhan-majumder/CFE-Course-For-Everyone"
 cd CFE-Course-For-Everyone
 ```
 
-## Add two .env files (in /client/src and root) , examples are given as .env.example.
+## Add two .env files (in /client and root) , examples are given as .env.example.
 ### make sure you are at the root of the project
 ```
 cd client
