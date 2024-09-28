@@ -24,12 +24,13 @@ export default function CreatorOAuth() {
         profilePicture: resultsFromGoogle.user.photoURL,
       })
 
+      console.log("response is : ", response)
       if(response.data.success){
         dispatch(googleSignInSuccess(response.data))
         alert("Signed in successfully")
         navigate("/")
       } else {
-        console.log(response)
+        console.log("Else: ", response)
         alert("Error signing in with Google:");
       }
     } catch (error) {
