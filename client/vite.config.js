@@ -8,6 +8,8 @@ export default defineConfig({
     proxy: {
       '/api': { // whenever there is a /api route, send the request to the localhost:3000 
         target: 'https://cfe-backend.onrender.com/',
+        changeOrigin: true,
+        secure: false,
       },
     },
   },
