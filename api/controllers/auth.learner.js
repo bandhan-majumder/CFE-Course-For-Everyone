@@ -224,9 +224,22 @@ const purchasedCourses = async (req, res, next) => {
     })
 }
 
+const logOut = async (req, res, next) => {
+    const learnerId = req.learnerId
+    if (!learnerId) {
+        res.status(403).json({
+            success: false,
+            message: "Log in first"
+        })
+    }
+    res.clearCookie('access_token')
+    res.status(200).json({ success: true, message: "Cookie deleted" })
+}
+
 module.exports = {
     signin: signin,
     signup: signup,
     oAuth: oAuth,
-    purchasedCourses: purchasedCourses
+    purchasedCourses: purchasedCourses,
+    logOut: logOut
 }

@@ -11,10 +11,13 @@ import {
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutLearner } from "@/features/learner/learnerSlice";
 
 const Dashboard = () => {
   const [courseData, setCourseData] = useState([]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   useEffect(() => {
     async function getAllCourses() {
       try {
@@ -23,7 +26,7 @@ const Dashboard = () => {
           setCourseData(response.data.courseData);
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
         if (error.status === 403) {
           alert("You are not signed in as learner");
           navigate("/learner/signin");
@@ -34,6 +37,14 @@ const Dashboard = () => {
     }
     getAllCourses();
   }, []);
+
+  async function logoutFunc (){
+    const response = await axios.post('/api/learner/logout')
+    dispatch(logoutLearner())
+    if(response.data.success){
+      navigate('/')
+    }
+  }
 
   return (
     <div className="container mx-auto px-4">
@@ -47,13 +58,14 @@ const Dashboard = () => {
         </p>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <NavLink to="/courses">
-            <Button size="lg">
-              Buy Courses
-            </Button>
+            <Button size="lg">Buy Courses</Button>
           </NavLink>
-          <NavLink to="/learner/signup">
-            <Button size="lg" className='bg-red-600'>
-              Log out
+          <Button size="lg" className="bg-red-600" onClick={logoutFunc}>
+            Log out
+          </Button>
+          <NavLink to="/creator/signin">
+            <Button size="lg" variant="outline">
+              Create Course
             </Button>
           </NavLink>
         </div>

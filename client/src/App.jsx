@@ -19,33 +19,33 @@ import PaymentPage from "./pages/course/PaymentPage";
 function App() {
   return (
     <BrowserRouter>
-      <div className="app">
-        <Header />
-        <Routes>
-          {/* viewers routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+        <div className="app">
+          <Header />
+          <Routes>
+            {/* viewers routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
 
-          {/* course payment route */}
-          <Route path="/course/payment" element={<PaymentPage />} />
+            {/* course payment route */}
+            <Route path="/course/payment" element={<PaymentPage />} />
 
-          {/* Learner auth routes */}
+            {/* Learner auth routes */}
 
-          <Route path="/learner/signup" element={<LearnerSignUp />} />
-          <Route path="/learner/signin" element={<LearnerSignIn />} />
-          <Route path="/learner/dashboard" element={<LearnerDashboard />} />
+            <Route path="/learner/signup" element={<LearnerSignUp />} />
+            <Route path="/learner/signin" element={<LearnerSignIn />} />
+            <Route path="/learner/dashboard" element={<LearnerDashboard />} />
 
-          {/* Creator routes */}
-          <Route path="/creator/signup" element={<CreatorSignUp />} />
-          <Route path="/creator/signin" element={<CreatorSignIn />} />
-          <Route path="/creator/dashboard" element={<CreatorDashboard />} />
-          <Route path="/creator/create/course" element={<CreateCourse />} />
-          <Route path="/creator/update/course" element={<UpdateCourse />} />
-        </Routes>
-      </div>
-    </BrowserRouter>
+            {/* Creator routes */}
+            <Route path="/creator/signup" element={<CreatorSignUp />} />
+            <Route path="/creator/signin" element={<CreatorSignIn />} />
+            <Route path="/creator/dashboard" element={<CreatorDashboard />} />
+            <Route path="/creator/create/course" element={<CreateCourse />} />
+            <Route path="/creator/update/course" element={<UpdateCourse />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
   );
 }
 

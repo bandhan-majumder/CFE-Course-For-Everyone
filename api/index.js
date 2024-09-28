@@ -22,4 +22,4 @@ app.use(cors())
 
 app.use('/api/course', courseRouter);
 app.use('/api/creator', creatorRouter);
-app.use('/api/learner', learnerRouter)
+app.use('/api/learner', learnerRouter);

@@ -33,10 +33,13 @@ const learnerSlice = createSlice({
         googleSignInSuccess: (state, action) => {
             console.log("Google learner sign in ", action.payload)
             state.currentLearner = action.payload
+        },
+        logoutLearner: (state) => {
+            state.currentLearner = null
         }
     }
 });
 
-export const { signInStart, signInFailure, signInSuccess, clearError, googleSignInSuccess} = learnerSlice.actions
+export const { signInStart, signInFailure, signInSuccess, clearError, googleSignInSuccess, logoutLearner} = learnerSlice.actions
 
 export default learnerSlice.reducer; //
