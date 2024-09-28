@@ -195,6 +195,7 @@ const oAuth = async (req, res) => {
 const purchasedCourses = async (req, res, next) => {
     const learnerId = req.learnerId
 
+    console.log("Learner id is: ", learnerId)
     if (!learnerId) {
         res.status(403).json({
             success: false,
