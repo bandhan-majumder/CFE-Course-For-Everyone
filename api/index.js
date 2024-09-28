@@ -22,7 +22,7 @@ async function main(){
 }
 main()
 
-const __dirname = path.resolve();
+// const __dirname = path.resolve();
 
 app.use(express.json())
 app.use(cors())
