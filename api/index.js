@@ -35,10 +35,10 @@ app.get("/",(req,res)=>{
 app.use('/api/course', courseRouter);
 app.use('/api/creator', creatorRouter);
 app.use('/api/learner', learnerRouter);
-app.use(express.static(path.join(__dirname,'/client/dist')));
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
 
-app.get('*', (req,res)=>{
-    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'))
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
 })
 app.use((err,res,next)=>{
     const statusCode = err.statusCode || 500;
