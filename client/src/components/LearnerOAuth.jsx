@@ -21,7 +21,7 @@ export default function LearnerOAuth() {
       const response = await axios.post('/api/learner/oAuth', {
         name: resultsFromGoogle.user.displayName,
         email: resultsFromGoogle.user.email,
-        googlePhotoUrl: resultsFromGoogle.user.photoURL,
+        profilePicture: resultsFromGoogle.user.photoURL,
       })
 
       if(response.data.success){

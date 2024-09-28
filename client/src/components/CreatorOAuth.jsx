@@ -21,7 +21,7 @@ export default function CreatorOAuth() {
       const response = await axios.post('/api/creator/oAuth', {
         name: resultsFromGoogle.user.displayName,
         email: resultsFromGoogle.user.email,
-        googlePhotoUrl: resultsFromGoogle.user.photoURL,
+        profilePicture: resultsFromGoogle.user.photoURL,
       })
 
       if(response.data.success){

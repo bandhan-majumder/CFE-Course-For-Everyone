@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    currentUser: null,
+    currentCreator: null,
     error: null,
     loading: false,
     signUpError: false
@@ -21,13 +21,13 @@ const creatorSlice = createSlice({
             state.error = null
         },
         signInSuccess: (state, action) => {
-            state.currentUser = action.payload,
+            state.currentCreator = action.payload,
                 state.loading = false,
                 state.error = null
 
         },
         signInFailure: (state, action) => {
-            state.currentUser = action.payload,
+            state.currentCreator = action.payload,
             state.loading = false,
             state.error = action.payload
         },
@@ -36,19 +36,19 @@ const creatorSlice = createSlice({
             state.signUpError = null
         },
         signUpSuccess: (state, action) => {
-            state.currentUser = action.payload,
+            state.currentCreator = action.payload,
                 state.loading = false,
                 state.signUpError = null
 
         },
         signUpFailure: (state, action) => {
-            state.currentUser = action.payload,
+            state.currentCreator = action.payload,
             state.loading = false,
             state.signUpError = action.payload
         },
         googleSignInSuccess: (state, action) => {
             console.log("Google learner sign in ", action.payload)
-            state.currentUser = action.payload
+            state.currentCreator = action.payload
         }
     }
 });
