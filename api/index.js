@@ -23,6 +23,11 @@ main()
 
 app.use(express.json())
 app.use(cors())
+app.get("/",(req,res)=>{
+    res.json({
+        "message": "CFE's backend is running.."
+    })
+})
 
 app.use('/api/course', courseRouter);
 app.use('/api/creator', creatorRouter);
