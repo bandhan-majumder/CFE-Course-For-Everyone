@@ -37,7 +37,7 @@ app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
 // match one above, send back React's index.html file.
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'error.html'));
 });
 
 // Error handling middleware
