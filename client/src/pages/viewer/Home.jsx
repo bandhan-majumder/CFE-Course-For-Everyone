@@ -13,9 +13,15 @@ import axios from "axios";
 import Spinner from "@/components/ui/spinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import DashboardButton from "@/components/DashboardButton";
+import JoinAsOption from "@/components/JoinAsOption";
 
 const LandingPage = () => {
   const [courseData, setCourseData] = useState([]);
+  const currentLearner = useSelector((state) => state.learner.currentLearner);
+  const currentCreator = useSelector((state) => state.creator.currentCreator);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [boughtCourses, setBoughtCourses] = useState({});
@@ -62,12 +68,8 @@ const LandingPage = () => {
           <NavLink to="/courses">
             <Button size="lg">Browse Courses</Button>
           </NavLink>
-          <NavLink to='/creator/signup'>
-            <Button size="lg" variant="outline">Join as Creator</Button>
-          </NavLink>
-          <NavLink to='/learner/signup'>
-            <Button size="lg" variant="outline">Join as Learner</Button>
-          </NavLink>
+          <DashboardButton />
+          <JoinAsOption />
         </div>
       </section>
 

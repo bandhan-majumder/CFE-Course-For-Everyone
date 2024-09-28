@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
 import UserProfileButton from "./UserProfileButton";
 
 export default function Header() {
@@ -13,9 +12,6 @@ export default function Header() {
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
-
-  const { currentLearner } = useSelector((state) => state.learner);
-  const { currentCreator } = useSelector((state) => state.creator);
 
   return (
     <div className="mx-100 bg-yellow-500 px-20 sticky">
