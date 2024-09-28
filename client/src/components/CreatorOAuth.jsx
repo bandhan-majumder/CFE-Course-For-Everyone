@@ -29,6 +29,7 @@ export default function CreatorOAuth() {
         alert("Signed in successfully")
         navigate("/")
       } else {
+        console.log(response)
         alert("Error signing in with Google:");
       }
     } catch (error) {
