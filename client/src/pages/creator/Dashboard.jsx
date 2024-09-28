@@ -11,20 +11,23 @@ import {
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutCreator } from "@/features/creator/creatorSlice";
 
 const Dashboard = () => {
   const [courseData, setCourseData] = useState([]);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
     async function getAllCourses() {
       try {
         const response = await axios.get("/api/creator/course/bulk");
-        console.log("r",response)
+        console.log("r", response);
         if (response.data && response.data.allCourses.length > 0) {
           setCourseData(response.data.allCourses);
         }
       } catch (error) {
-        console.log("e",error)
+        console.log("e", error);
         if (error.status === 403) {
           alert("You are not signed in as admin");
           navigate("/creator/signin");
@@ -35,6 +38,14 @@ const Dashboard = () => {
     }
     getAllCourses();
   }, []);
+
+  async function logoutFunc() {
+    const response = await axios.post("/api/creator/logout");
+    dispatch(logoutCreator());
+    if (response.data.success) {
+      navigate("/");
+    }
+  }
 
   return (
     <div className="container mx-auto px-4">
@@ -47,19 +58,12 @@ const Dashboard = () => {
           Here we bring contents "For everyone by experts"
         </p>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <NavLink to="/courses">
-            <Button size="lg" variant="outline">
-              Browse Courses
-            </Button>
-          </NavLink>
           <NavLink to="/creator/create/course">
             <Button size="lg">Create course</Button>
           </NavLink>
-          <NavLink to="/learner/signup">
-            <Button size="lg" variant="outline">
-              Join as Learner
-            </Button>
-          </NavLink>
+          <Button size="lg" className="bg-red-600" onClick={logoutFunc}>
+            Log out
+          </Button>
         </div>
       </section>
 
@@ -82,7 +86,7 @@ const Dashboard = () => {
                 </CardContent>
                 <CardFooter>
                   <NavLink to={`/creator/update/course?c_id=${course._id}`}>
-                  <Button>Update Course</Button>
+                    <Button>Update Course</Button>
                   </NavLink>
                 </CardFooter>
               </Card>

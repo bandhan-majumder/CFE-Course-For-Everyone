@@ -63,11 +63,6 @@ const Dashboard = () => {
           <Button size="lg" className="bg-red-600" onClick={logoutFunc}>
             Log out
           </Button>
-          <NavLink to="/creator/signin">
-            <Button size="lg" variant="outline">
-              Create Course
-            </Button>
-          </NavLink>
         </div>
       </section>
 

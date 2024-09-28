@@ -278,11 +278,24 @@ const getMyCourse = async (req, res) => {
     })
 }
 
+const logOut = async (req, res, next) => {
+    const creatorId = req.creatorId
+    if (!creatorId) {
+        res.status(403).json({
+            success: false,
+            message: "Log in first"
+        })
+    }
+    res.clearCookie('access_token')
+    res.status(200).json({ success: true, message: "Cookie deleted" })
+}
+
 module.exports = {
     signin: signin,
     signup: signup,
     oAuth: oAuth,
     updateCourse: updateCourse,
     getMyCourse: getMyCourse,
+    logOut: logOut,
     createCourse: createCourse
 }
