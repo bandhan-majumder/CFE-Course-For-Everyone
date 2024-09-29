@@ -9,11 +9,6 @@ cd CFE-Course-For-Everyone
 
 ## Add two .env files (in /client and root) , examples are given as .env.example.
 
-### Change the proxy:
-
-https://github.com/bandhan-majumder/CFE-Course-For-Everyone/blob/1c4b3d79d678146e744e29a97c798f449ca16919/client/vite.config.js#L10
-change it to http://localhost:3000
-
 ## Run the followings
 ### make sure you are at the root of the project
 ```
