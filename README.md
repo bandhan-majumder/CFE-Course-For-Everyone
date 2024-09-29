@@ -1,4 +1,6 @@
 # CFE - Course For Everyone
+![image](https://github.com/user-attachments/assets/07424b6e-2ba5-4fe1-b200-e434534b5851)
+
 CFE is a course selling site which is build on the MERN stack. Creators can sell course, update course and Learners can buy courses. This site is using cookie based authentication. 
 
 ## To run it locally,, run the following commands
