@@ -65,7 +65,8 @@ const LandingPage = () => {
           Welcome to Course For Everyone
         </h1>
         <p className="text-xl mb-8">
-          Here we bring contents "For everyone by experts"
+          Here we bring contents {" "}
+        <span className="text-orange-700 font-bold">For everyone by experts</span>
         </p>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <NavLink to="/courses">
